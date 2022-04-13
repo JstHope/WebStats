@@ -8,20 +8,19 @@
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
 </head>
 <body onload="ask_for_data()">
-<p id='reponse'></p>
+<p id='data'></p>
 </body>
 <script>
 const socket = io();
-var response = document.getElementById('response');
+var data = document.getElementById('data');
 
 function ask_for_data(){
     socket.emit("give me data");
 }
 
-function sendLink() {
 socket.on("return test", (token)=>{
-    response.innerHTML = token;
-    console.log("ok");
-});}
+    console.log(token);
+    data.innerHTML = token;
+});
 </script>
 </html>

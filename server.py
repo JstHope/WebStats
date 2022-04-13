@@ -27,8 +27,9 @@ def use_link(sid, link):
     print(f"[{sid}] {link}")
 
 @sio.on("give me data")
-def send_all_data(sid):
-    print("ok")
+async def send_all_data(sid):
+    await sio.emit('return test',sid)
+    print(f'Data send to [{sid}]')
     
 
 if __name__ == '__main__':

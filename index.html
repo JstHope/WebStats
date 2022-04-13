@@ -1,0 +1,23 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="text" id='input_link'>
+    <button onClick="sendLink()">Hit Me</button>
+
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+    <script>
+      const socket = io();
+      var link_input = document.getElementById('input_link')
+      function sendLink() {
+        socket.emit("send link", link_input.value);
+      }
+    </script>
+  </body>
+</html>

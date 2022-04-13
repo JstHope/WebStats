@@ -19,12 +19,12 @@ def index(request):
 ## use this decorator, passing in the name of the
 ## event we wish to listen out for
 @sio.on('send link')
-def print_message(sid, message):
+def use_link(sid, link):
     ## When we receive a new event of type
     ## 'message' through a socket.io connection
     ## we print the socket ID and the message
     print("Socket ID: " , sid)
-    print(message)
+    print(link)
 
 ## We bind our aiohttp endpoint to our app
 ## router

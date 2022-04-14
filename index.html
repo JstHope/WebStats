@@ -9,14 +9,16 @@
   </head>
   <body>
     <input type="text" id='input_link'>
-    <button onClick="sendLink();window.location.href='/search'">Hit Me</button>
+    <button onClick="setCookie(link_input.value);window.location.href='/search'">Hit Me</button>
 
-    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
     <script>
-      const socket = io();
       var link_input = document.getElementById('input_link')
-      function sendLink() {
-        socket.emit("send link", link_input.value);
+
+      function setCookie(cvalue, exhours) {
+        const d = new Date();
+        d.setTime(d.getTime() + (exhours * 60 * 60 * 1000));
+        let expires = "expires="+d.toUTCString();
+        document.cookie = "SEARCH_LINK=" + cvalue + ";" + expires + ";path=/";
       }
     </script>
   </body>

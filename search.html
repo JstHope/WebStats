@@ -7,16 +7,16 @@
     <title>Document</title>
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
 </head>
-<body onload="ask_for_data()">
+<body onload="sendLink();">
 <p id='data'></p>
 </body>
 <script>
 const socket = io();
 var data = document.getElementById('data');
 
-function ask_for_data(){
-    socket.emit("give me data");
-}
+function sendLink() {
+        socket.emit("send link", document.cookie);
+      }
 
 socket.on("return test", (token)=>{
     console.log(token);

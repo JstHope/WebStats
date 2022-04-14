@@ -22,13 +22,12 @@ app.router.add_get('/', index)
 app.router.add_get('/search', search)
 
 
-@sio.on('send link')
-def use_link(sid, link):
-    print(f"[{sid}] {link}")
 
-@sio.on("give me data")
-async def send_all_data(sid):
-    await sio.emit('return test',sid)
+@sio.on("send link")
+async def send_all_data(sid,cookie):
+    link = list(filter(lambda x: 'SEARCH_LINK' in x, cookie.split('; ')))[0].split("=")[1]
+    print(link)
+    await sio.emit('return test',link)
     print(f'Data send to [{sid}]')
     
 

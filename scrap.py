@@ -1,4 +1,6 @@
 # Importer les librairies utilisées
+from re import T
+from socket import create_server
 import requests
 from bs4 import BeautifulSoup
 
@@ -17,9 +19,14 @@ for scriptSoups in soup.findAll("script"):
     try:
         scriptSRCList.append(scriptSoups['src'])
     except:
-        print("Pas d'attribut SRC")
+        print("",end='')
 
-print(scriptSRCList)
+for links in scriptSRCList:
+    try:
+        r = requests.get(links)
+        print(r.content)
+    except:
+        print('lien cancer')
 
 # Récupérer les attributs href des éléments link sur la page
 #for linkSoups in soup.findAll("link"):

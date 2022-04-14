@@ -44,15 +44,15 @@ async def send_all_data(sid,cookie):
     f.close()
     
     # envoie le resultat au client grace au socketid
-    await sio.emit('return test',data,room=sid)
-    print(f'Data send to [{sid}]')
+    await sio.emit('receive data',data,room=sid)
+    print(f'[Data sended to {sid}]\n\n')
     
 
 
 
 #creation d'une fonction asynchrone
 async def run_subprocess(link,sid):
-    print('Starting subprocess')
+    print('/Starting subprocess')
     # on fait une promesse en créant un subprocess qui va executer le script de scrap 
     proc = await asyncio.create_subprocess_exec('python', 'testasync.py',link,sid, stdout=asyncio.subprocess.PIPE)
     # on récupère l'output brut
@@ -60,8 +60,8 @@ async def run_subprocess(link,sid):
     # la réponse est en bytes --> On convertit la réponse en string 
     output = stdout.strip().decode('utf-8')
 
-    print('Subprocess output: ' + output)
-    print(f'Subprocess finished with return code {proc.returncode}')
+    print('/Subprocess output: ' + output)
+    print(f'/Subprocess finished with return code {proc.returncode}')
 
 
 

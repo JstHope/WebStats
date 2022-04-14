@@ -8,23 +8,22 @@
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
 </head>
 <body onload="sendLink();">
-<p id='data'></p>
+<p id='result'></p>
 </body>
 <script>
 const socket = io();
-var data = document.getElementById('data');
+var result = document.getElementById('result');
 
 function sendLink() {
         if (document.cookie == ''){
             window.location.href='/'}
         else{
         socket.emit("send link", document.cookie);}
-
       }
 
-socket.on("return test", (token)=>{
-    console.log(token);
-    data.innerHTML = token;
+socket.on("receive data", (data)=>{
+    console.log(data);
+    result.innerHTML = data['link'];
 });
 </script>
 </html>

@@ -1,5 +1,6 @@
 from aiohttp import web
 import socketio
+import asyncio
 
 ## Crée un serveur Async Socket IO 
 sio = socketio.AsyncServer()
@@ -27,6 +28,7 @@ app.router.add_get('/search', search)
 async def send_all_data(sid,cookie):
     link = list(filter(lambda x: 'SEARCH_LINK' in x, cookie.split('; ')))[0].split("=")[1]
     print(link)
+    
     await sio.emit('return test',link,room=sid)
     print(f'Data send to [{sid}]')
     

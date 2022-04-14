@@ -15,7 +15,11 @@ const socket = io();
 var data = document.getElementById('data');
 
 function sendLink() {
-        socket.emit("send link", document.cookie);
+        if (document.cookie == ''){
+            window.location.href='/'}
+        else{
+        socket.emit("send link", document.cookie);}
+
       }
 
 socket.on("return test", (token)=>{

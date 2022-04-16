@@ -13,22 +13,22 @@ sio.attach(app)
 
 # Pour retourner le index.html de manière envoyable pour le serveur
 def index(request):
-    with open('index.html') as f:
-        return web.Response(text=f.read(), content_type='text/html')
-def search(request):
-    with open('search.html') as f:
-        return web.Response(text=f.read(), content_type='text/html')
-def style(request):
-    with open('style.css') as f:
-        return web.Response(text=f.read(), content_type='text/css')
+     with open('static/index.html') as f:
+         return web.Response(text=f.read(), content_type='text/html')
 
+#ajout d'un fichier statique
+app.router.add_static('/css/',
+                       path='static/css',
+                       name='css')
+app.router.add_static('/font/',
+                       path='static/font',
+                       name='font')
+app.router.add_static('/resources/',
+                       path='static/resources',
+                       name='resources')
 
-
-
-## On attache nos fichier html a notre serveur
+#met une redirection sur / a notre fichier html 
 app.router.add_get('/', index)
-app.router.add_get('/search', search)
-app.router.add_get('/style.css',style)
 
 
 

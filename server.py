@@ -33,9 +33,8 @@ app.router.add_get('/', index)
 
 
 @sio.on("send link")
-async def send_all_data(sid,cookie):
+async def send_all_data(sid,link):
     # prend le cookie contenant le lien
-    link = list(filter(lambda x: 'SEARCH_LINK' in x, cookie.split('; ')))[0].split("=")[1]
     print(link)
 
     # on fait une promesse en lancant le subprocess 

@@ -13,11 +13,27 @@
     <img src="resources/logo_transparent.png" class="logo">
     <div class="searchbar">
       <input type="text" id="input_link" class="searchbar__input">
-      <button onClick="setCookie(link_input.value);window.location.href='/search'" class="searchbar__button">Search</button>
+      <button onClick="send_link()" class="searchbar__button">Search</button>
     </div>
 
     <section class="output output--empty">
-
     </section>
+    <p id="result">test</p>
   </body>
+  <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+  <script>
+
+  const socket = io();
+  var input = document.getElementById("input_link")
+  var result = document.getElementById("result")
+  
+  function send_link(){
+  socket.emit("send link", input.value);}
+
+  socket.on("receive data", (data)=>{
+      console.log(data);
+      result.innerHTML = data['link'];
+  });
+        
+  </script>
 </html>

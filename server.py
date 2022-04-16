@@ -1,7 +1,5 @@
 from aiohttp import web
-import socketio
-import asyncio
-import json
+import socketio,asyncio,json,os
 
 ## Crée un serveur Async Socket IO 
 sio = socketio.AsyncServer()
@@ -48,6 +46,9 @@ async def send_all_data(sid,link):
     
     # ferme le ficher
     f.close()
+
+    os.remove(f'temp_subprocess_output/{sid}.json')
+
     
     # envoie le resultat au client grace au socketid
     await sio.emit('receive data',data,room=sid)

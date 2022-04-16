@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,23 +7,25 @@
     <title>Document</title>
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
 </head>
+
 <body onload="sendLink();">
-<p id='result'></p>
+  <p id='result'></p>
 </body>
+
 <script>
-const socket = io();
-var result = document.getElementById('result');
+  const socket = io();
+  var result = document.getElementById('result');
 
-function sendLink() {
-        if (document.cookie == ''){
-            window.location.href='/'}
-        else{
-        socket.emit("send link", document.cookie);}
-      }
+  function sendLink() {
+          if (document.cookie == ''){
+              window.location.href='/'}
+          else{
+          socket.emit("send link", document.cookie);}
+        }
 
-socket.on("receive data", (data)=>{
-    console.log(data);
-    result.innerHTML = data['link'];
-});
+  socket.on("receive data", (data)=>{
+      console.log(data);
+      result.innerHTML = data['link'];
+  });
 </script>
 </html>

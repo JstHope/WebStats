@@ -13,20 +13,33 @@ r = requests.get(URL)
 # Récupérer et parser le code source de la page
 soup = BeautifulSoup(r.content, "html5lib")
 
+
+###
+###     SRC
+###
+
+# Faire une liste avec les attributs SRC des éléments script
 scriptSRCList = []
 
 for scriptSoups in soup.findAll("script"):
     try:
-        scriptSRCList.append(scriptSoups['src'])
+        scriptSRCList.append(scriptSoups["src"])
     except:
-        print("",end='')
+        print("",end="")
 
-for links in scriptSRCList:
+# Aller chercher le contenu des SRC
+for SRC in scriptSRCList:
     try:
-        r = requests.get(links)
-        print(r.content)
+        r = requests.get(SRC)
+        scriptLocateImport = r.content.find("import")
+
+        if scriptLocateImport != -1:
+            print(r.content[scriptLocateImport:5])
+        else:
+            print("Pas de librairie utilisée dans le script")
     except:
-        print('lien cancer')
+        print("Script sans attribut SRC")
+
 
 # Récupérer les attributs href des éléments link sur la page
 #for linkSoups in soup.findAll("link"):

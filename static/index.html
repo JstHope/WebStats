@@ -17,8 +17,8 @@
     </div>
 
     <section class="output output--empty">
+      <p id="result">test</p>
     </section>
-    <p id="result">test</p>
   </body>
   <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
   <script>
@@ -26,7 +26,7 @@
   const socket = io();
   var input = document.getElementById("input_link")
   var result = document.getElementById("result")
-  
+
   function send_link(){
   socket.emit("send link", input.value);}
 
@@ -34,6 +34,6 @@
       console.log(data);
       result.innerHTML = data['link'];
   });
-        
+
   </script>
 </html>

@@ -14,6 +14,7 @@ def index(request):
      with open('static/index.html') as f:
          return web.Response(text=f.read(), content_type='text/html')
 
+
 #ajout d'un fichier statique
 app.router.add_static('/css/',
                        path='static/css',

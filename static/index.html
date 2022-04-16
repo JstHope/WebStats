@@ -25,20 +25,20 @@
       <p id="result">test</p>
     </section>
   </body>
+
   <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+
   <script>
+    const socket = io();
+    var input = document.getElementById("input_link")
+    var result = document.getElementById("result")
 
-  const socket = io();
-  var input = document.getElementById("input_link")
-  var result = document.getElementById("result")
+    function send_link(){
+    socket.emit("send link", input.value);}
 
-  function send_link(){
-  socket.emit("send link", input.value);}
-
-  socket.on("receive data", (data)=>{
-      console.log(data);
-      result.innerHTML = data['link'];
-  });
-
+    socket.on("receive data", (data)=>{
+        console.log(data);
+        result.innerHTML = data['link'];
+    });
   </script>
 </html>

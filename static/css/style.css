@@ -1,3 +1,6 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@700&display=swap');
+
 :root {
   /* Typescales
   @link https://utopia.fyi/type/calculator?c=320,18,1.2,1140,22,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l */
@@ -31,6 +34,13 @@ img {
 }
 
 
+/* Elements */
+h1 {
+  font-family: 'Cabin', sans-serif;
+  font-size: var(--step-5);
+}
+
+
 /* Layout */
 body {
   display: grid;
@@ -38,10 +48,17 @@ body {
   place-items: center;
   padding: 1rem;
 	background: linear-gradient(45deg, var(--accent-1), var(--accent-2));
+  color: white;
+}
+section {
+  display: grid;
+  place-content: center;
+  place-items: center;
+  min-height: 100vh;
 }
 .logo {
-	height: 100vh;
-  aspect-ratio: 1/1;
+	max-width: 250px;
+  margin-bottom: 2rem;
 }
 
 /* Search */

@@ -18,10 +18,17 @@ def index(request):
 def search(request):
     with open('search.html') as f:
         return web.Response(text=f.read(), content_type='text/html')
+def style(request):
+    with open('style.css') as f:
+        return web.Response(text=f.read(), content_type='text/css')
+
+
+
 
 ## On attache nos fichier html a notre serveur
 app.router.add_get('/', index)
 app.router.add_get('/search', search)
+app.router.add_get('/style.css',style)
 
 
 

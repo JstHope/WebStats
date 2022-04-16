@@ -5,20 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
+
+    <link rel="stylesheet" href="/public/style.css">
   </head>
+
   <body>
-    <input type="text" id='input_link'>
-    <button onClick="setCookie(link_input.value);window.location.href='/search'">Search</button>
+    <img src="https://cdn.discordapp.com/attachments/486928125931028481/964932667781046292/logo_transparent.png" class="logo">
+    <div class="searchbar">
+      <input type="text" id="input_link" class="searchbar__input">
+      <button onClick="setCookie(link_input.value);window.location.href='/search'" class="searchbar__button">Search</button>
+    </div>
 
-    <script>
-      var link_input = document.getElementById('input_link')
+    <section class="output output--empty">
 
-      function setCookie(cvalue, exhours) {
-        const d = new Date();
-        d.setTime(d.getTime() + (exhours * 60 * 60 * 1000));
-        let expires = "expires="+d.toUTCString();
-        document.cookie = "SEARCH_LINK=" + cvalue + ";" + expires + ";path=/";
-      }
-    </script>
+    </section>
   </body>
 </html>

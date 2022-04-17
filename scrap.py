@@ -31,10 +31,10 @@ for scriptSoups in soup.findAll("script"):
 for SRC in scriptSRCList:
     try:
         r = requests.get(SRC)
-        scriptLocateImport = r.content.find("import")
+        scriptLocateImport = str(r.content).find("import")
 
         if scriptLocateImport != -1:
-            print(r.content[scriptLocateImport:5])
+            print(str(r.content)[scriptLocateImport:])
         else:
             print("Pas de librairie utilisée dans le script")
     except:

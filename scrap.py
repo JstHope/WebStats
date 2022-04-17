@@ -1,12 +1,18 @@
 # Importer les librairies utilisées
-from re import T
-from socket import create_server
 import requests
 from bs4 import BeautifulSoup
 
+def find_all(a_str, sub):
+    start = 0
+    while True:
+        start = a_str.find(sub, start)
+        if start == -1: return
+        yield start
+        start += len(sub) # use start += 1 to find overlapping matches
+
 # Définir la page à scraper
 URL = "https://lcplanta.ch/"
-
+SSL = URL[:URL.find("://")]
 # Raccourcir la requête en une variable
 r = requests.get(URL)
 
@@ -19,24 +25,32 @@ soup = BeautifulSoup(r.content, "html5lib")
 ###
 
 # Faire une liste avec les attributs SRC des éléments script
-scriptSRCList = []
+scriptSRCList = [URL]
 
 for scriptSoups in soup.findAll("script"):
     try:
-        scriptSRCList.append(scriptSoups["src"])
+        if str(scriptSoups["src"])[0:2] == '//':
+            scriptSRCList.append(SSL + ":",scriptSoups["src"])
+        else:
+            scriptSRCList.append(scriptSoups["src"])
+
     except:
         print("",end="")
 
 # Aller chercher le contenu des SRC
-for SRC in scriptSRCList:
+for src in scriptSRCList:
     try:
-        r = requests.get(SRC)
-        scriptLocateImport = str(r.content).find("import")
+        r = requests.get(src)
+        scriptLocateImport = list(find_all(str(r.content),"require("))
+        for startimport in scriptLocateImport:
+            k = False
+            endimport = startimport
+            while k == False:
+                if str(r.content)[endimport] == ")":
+                    print(str(r.content)[startimport+9:endimport-1])
+                    k = True
+                endimport +=1
 
-        if scriptLocateImport != -1:
-            print(str(r.content)[scriptLocateImport:])
-        else:
-            print("Pas de librairie utilisée dans le script")
     except:
         print("Script sans attribut SRC")
 

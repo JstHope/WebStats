@@ -1,10 +1,13 @@
 # Importer les librairies utilisées
+from ensurepip import version
 import requests
 from bs4 import BeautifulSoup
 
 
+# trouver wp: <meta name=generator content="WordPress 4.9.8"> <meta name="generator" content="WordPress 4.9.8">
+
 # Définir la page à scraper
-URL = "https://wikidot.com"
+URL = "https://lcplanta.ch"
 SSL = URL[:URL.find("://")]
 # Raccourcir la requête en une variable
 r = requests.get(URL)
@@ -12,7 +15,8 @@ r = requests.get(URL)
 # Récupérer et parser le code source de la page
 soup = BeautifulSoup(r.content, "html5lib")
 
-
+black_list = ['https://developer.mozilla.org']
+white_list = ["Google Analytics",""]
 ###
 ###     SRC
 ###
@@ -40,19 +44,36 @@ for scriptSoups in soup.findAll("link"):
         print("",end="")
 
 raw_lib = []
-
+domains = []
+print(scriptSRCList)
 # Trouve les min.js
 for link in scriptSRCList:
-    if link.find(URL) != -1 or link[0] == "/":
-        if link.find(".js?ver=") != -1:
-            lib = link.split("/")[link.count("/")]
-            raw_lib.append(lib.split(".js?ver=")[0] + " " + lib.split(".js?ver=")[1])
-            
-        elif link.find(".js") != -1:
-            lib = link.split("/")[link.count("/")]
-            raw_lib.append(lib.split(".")[0])
-    else:
-        print(link)
+    version = ''
+    # list les domains utilisé
+    try:
+        if link[0] != '/':
+            output = link.split('/')[2].split(".")[-2]
+            if output not in domains:
+                domains.append(output)
+    except:
+        print(f"{link} n'a pas de domains")
+    if link.find(".js?ver=") != -1:
+        lib = link.split("/")[link.count("/")]
+        version = " version=" + lib.split(".js?ver=")[1]
+        output = lib.split(".js?ver=")[0] + version
+        if output not in raw_lib:
+            raw_lib.append(output)
+
+        
+    elif (link.find(".js") != -1 or link.find(".css") != -1) and link.find(".json") == -1:
+        lib = link.split("/")[link.count("/")]
+        if link.split("/")[-2].split(".")[0].isdigit() == True:
+            version = " version=" + link.split("/")[-2]
+        output = lib.split(".")[0] + " " + lib.split(".")[-1] + version
+        if output not in raw_lib:
+            raw_lib.append(output)
+
+print(domains)
 """ 
 # trouve les lib importé
 def find_all(a_str, sub):
@@ -78,6 +99,6 @@ for src in scriptSRCList:
 
     except:
         print("Script sans attribut SRC")
- """
+"""
 print(raw_lib)
 # go tout chercher sur ca https://www.npmjs.com/package/... ou equivalent voire si dl< nbr

@@ -11,12 +11,12 @@ URL = "https://lcplanta.ch"
 SSL = URL[:URL.find("://")]
 # Raccourcir la requête en une variable
 r = requests.get(URL)
-
+rcontent = str(r.content)
 # Récupérer et parser le code source de la page
 soup = BeautifulSoup(r.content, "html5lib")
 
 black_list = ['https://developer.mozilla.org']
-white_list = ["Google Analytics",""]
+white_list = ["Google Analytics"]
 ###
 ###     SRC
 ###
@@ -49,7 +49,7 @@ print(scriptSRCList)
 # Trouve les min.js
 for link in scriptSRCList:
     version = ''
-    # list les domains utilisé
+    # liste les domains utilisé
     try:
         if link[0] != '/':
             output = link.split('/')[2].split(".")[-2]
@@ -57,10 +57,15 @@ for link in scriptSRCList:
                 domains.append(output)
     except:
         print(f"{link} n'a pas de domains")
+
+    # cherche les noms d'extension dans les fichier js
     if link.find(".js?ver=") != -1:
         lib = link.split("/")[link.count("/")]
         version = " version=" + lib.split(".js?ver=")[1]
-        output = lib.split(".js?ver=")[0] + version
+        if lib.find(".min.js?ver=") != -1:
+            output = lib.split(".min.js?ver=")[0] + " js" + version
+        else:
+            output = lib.split(".js?ver=")[0] + " js" + version
         if output not in raw_lib:
             raw_lib.append(output)
 
@@ -74,6 +79,9 @@ for link in scriptSRCList:
             raw_lib.append(output)
 
 print(domains)
+print(raw_lib)
+
+
 """ 
 # trouve les lib importé
 def find_all(a_str, sub):
@@ -100,5 +108,39 @@ for src in scriptSRCList:
     except:
         print("Script sans attribut SRC")
 """
-print(raw_lib)
+
+# Wordpress finder
+WordPress = ''
+i=''
+count = 0
+if rcontent.find('<meta name="generator" content=') != -1:
+    index = rcontent.find('<meta name="generator" content=')
+    while i != '>':
+        i = rcontent[index + count]
+        WordPress += i
+        count +=1
+    WordPress = WordPress.split('WordPress ')[1].split('"')[0]
+
+elif rcontent.find('<meta name=generator content=') != -1:
+    index = rcontent.find('<meta name=generator content=')
+    while i != '>':
+        i = rcontent[index + count]
+        WordPress += i
+        count +=1
+    WordPress = WordPress.split('WordPress ')[1].split('"')[0]
+else:
+    count = 0
+    if scriptSRCList:
+        while WordPress != True or count < len(scriptSRCList):
+            if scriptSRCList[count].find("wp-content") != -1:
+                WordPress = True
+            count += 1
+print("WordPress: ",WordPress)
+# Google Analytics
+
+if rcontent.find("Google Analytics") != -1:
+    print("Google Analytics: Find")
+
+
+
 # go tout chercher sur ca https://www.npmjs.com/package/... ou equivalent voire si dl< nbr

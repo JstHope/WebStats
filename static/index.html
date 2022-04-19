@@ -25,33 +25,54 @@
     <section id="search-section">
       <h2>Recherche</h2>
       <div class="searchbar">
-        <input type="text" id="input_link" class="searchbar__input">
-        <button onClick="send_link()" class="searchbar__button">Rechercher</button>
+        <form>
+          <input type="text" id="input_link" class="searchbar__input" placeholder="Insérez une URL..." aria-label="Choisir le lien de la page web à inspecter">
+          <input type="submit" value="Rechercher" onClick="send_link()" class="searchbar__button">
+        </form>
       </div>
     </section>
 
     <section id="output-section">
       <h2>Résultats</h2>
       <div class="output output--empty">
-        <div class="output-couvercle">
-          <h3>Chargement...</h3>
+        <div class="output-couvercle output-couvercle--open">
+          <div class="loading">
+            <div class="loading__ball loading__ball--1"></div>
+            <div class="loading__ball loading__ball--2"></div>
+            <div class="loading__ball loading__ball--3"></div>
+          </div>
         </div>
         <p id="result">test</p>
         <div class="output-entry">
           <h3>Placeholder</h3>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem assumenda officiis consequuntur recusandae quod officia, autem odio, voluptatum expedita ad dicta delectus eum mollitia veniam incidunt repudiandae cumque tenetur tempore! Repellat cumque excepturi cupiditate non, in aspernatur placeat, tempore architecto dolores harum quaerat. Sapiente accusantium adipisci, similique, laboriosam fuga et. Temporibus iusto voluptatibus recusandae asperiores ad alias, et quam inventore. Molestiae iusto recusandae assumenda sunt, itaque eos architecto mollitia quidem perferendis odit, quos reprehenderit tempore laboriosam aspernatur iure nam ipsa.
+          <div class="output-content">
+            <span class="js-libs"><b>Librairies JavaScript :</b> Placeholder</span>
+            <br>
+            <span class="css-classes"><b>Classes CSS :</b> Placeholder</span>
+            <br>
+            <span class="resources"><b>Autres ressources :</b></span>
+          </div>
+          <div class="output-logo">
+            <img src="{$lien}" alt="Logo de la libraire {$truc}" class="output-logo">
+          </div>
         </div>
         <div class="output-entry">
           <h3>Placeholder</h3>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem assumenda officiis consequuntur recusandae quod officia, autem odio, voluptatum expedita ad dicta delectus eum mollitia veniam incidunt repudiandae cumque tenetur tempore! Repellat cumque excepturi cupiditate non, in aspernatur placeat, tempore architecto dolores harum quaerat. Sapiente accusantium adipisci, similique, laboriosam fuga et. Temporibus iusto voluptatibus recusandae asperiores ad alias, et quam inventore. Molestiae iusto recusandae assumenda sunt, itaque eos architecto mollitia quidem perferendis odit, quos reprehenderit tempore laboriosam aspernatur iure nam ipsa.
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem assumenda officiis consequuntur recusandae quod officia, autem odio, voluptatum expedita ad dicta delectus eum mollitia veniam incidunt repudiandae cumque tenetur tempore! Repellat cumque excepturi cupiditate non, in aspernatur placeat, tempore architecto dolores harum quaerat.
+          </p>
         </div>
         <div class="output-entry">
           <h3>Placeholder</h3>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem assumenda officiis consequuntur recusandae quod officia, autem odio, voluptatum expedita ad dicta delectus eum mollitia veniam incidunt repudiandae cumque tenetur tempore! Repellat cumque excepturi cupiditate non, in aspernatur placeat, tempore architecto dolores harum quaerat. Sapiente accusantium adipisci, similique, laboriosam fuga et. Temporibus iusto voluptatibus recusandae asperiores ad alias, et quam inventore. Molestiae iusto recusandae assumenda sunt, itaque eos architecto mollitia quidem perferendis odit, quos reprehenderit tempore laboriosam aspernatur iure nam ipsa.
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem assumenda officiis consequuntur recusandae quod officia, autem odio, voluptatum expedita ad dicta delectus eum mollitia veniam incidunt repudiandae cumque tenetur tempore! Repellat cumque excepturi cupiditate non, in aspernatur placeat, tempore architecto dolores harum quaerat.
+          </p>
         </div>
         <div class="output-entry">
           <h3>Placeholder</h3>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem assumenda officiis consequuntur recusandae quod officia, autem odio, voluptatum expedita ad dicta delectus eum mollitia veniam incidunt repudiandae cumque tenetur tempore! Repellat cumque excepturi cupiditate non, in aspernatur placeat, tempore architecto dolores harum quaerat. Sapiente accusantium adipisci, similique, laboriosam fuga et. Temporibus iusto voluptatibus recusandae asperiores ad alias, et quam inventore. Molestiae iusto recusandae assumenda sunt, itaque eos architecto mollitia quidem perferendis odit, quos reprehenderit tempore laboriosam aspernatur iure nam ipsa.
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem assumenda officiis consequuntur recusandae quod officia, autem odio, voluptatum expedita ad dicta delectus eum mollitia veniam incidunt repudiandae cumque tenetur tempore! Repellat cumque excepturi cupiditate non, in aspernatur placeat, tempore architecto dolores harum quaerat.
+          </p>
         </div>
       </div>
     </section>

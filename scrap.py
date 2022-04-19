@@ -1,11 +1,11 @@
 # Importer les librairies utilisées
-import requests
+import requests,googlesearch
 from bs4 import BeautifulSoup
 
 # trouver wp: <meta name=generator content="WordPress 4.9.8"> <meta name="generator" content="WordPress 4.9.8">
 
 # Définir la page à scraper
-URL = "https://lcplanta.ch"
+URL = "https://lcplanta.ch/"
 SSL = URL[:URL.find("://")]
 DOMAIN = URL.split("/")[2].split(".")[-2]
 # Raccourcir la requête en une variable
@@ -128,15 +128,46 @@ elif rcontent.find('<meta name=generator content=') != -1:
 else:
     count = 0
     if scriptSRCList:
-        while WordPress != True or count < len(scriptSRCList):
+        while WordPress != True and count < len(scriptSRCList):
             if scriptSRCList[count].find("wp-content") != -1:
                 WordPress = True
             count += 1
 print("WordPress: ",WordPress)
-# Google Analytics
 
+# Google Analytics
 if rcontent.find("Google Analytics") != -1:
     print("Google Analytics: Find")
+
+
+
+
+
+## chercher les infos a afficher + chercher si pas faux résultats
+# on commence par les domains: 
+
+#si ya pas de wikipedia
+for domain in domains:
+    search = list(googlesearch.search(domain,lang="fr"))
+    site = str(requests.get(search[0]).content)
+    debut = site.find('<meta name="description" content=')
+    count = 0
+    result = ''
+    k = ''
+    while k != '>':
+        k = site[debut + count]
+        count +=1
+        result += k
+    print("source: ",search[0],"\n")
+    print(result)
+
+
+
+
+
+
+
+
+
 
 
 

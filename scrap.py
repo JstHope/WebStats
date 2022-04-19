@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 # trouver wp: <meta name=generator content="WordPress 4.9.8"> <meta name="generator" content="WordPress 4.9.8">
 
 # Définir la page à scraper
-URL = "https://lcplanta.ch/"
+URL = "https://www.faceit.com/fr/home"
 SSL = URL[:URL.find("://")]
 DOMAIN = URL.split("/")[2].split(".")[-2]
 # Raccourcir la requête en une variable
@@ -150,15 +150,16 @@ for domain in domains:
     search = list(googlesearch.search(domain,lang="fr"))
     site = str(requests.get(search[0]).content)
     debut = site.find('<meta name="description" content=')
-    count = 0
+    count = 34
     result = ''
     k = ''
     while k != '>':
         k = site[debut + count]
         count +=1
         result += k
-    print("source: ",search[0],"\n")
-    print(result)
+    result = result[:-2]
+    print("source: ",search[0])
+    print(result,"\n")
 
 
 

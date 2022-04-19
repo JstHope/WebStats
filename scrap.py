@@ -19,6 +19,11 @@ white_list = ["Google Analytics"]
 
 scriptSRCList = []
 
+output = {
+    "jslib":[],    
+    "depend":[]
+
+}
 # Faire une liste avec les attributs SRC des éléments script
 for scriptSoups in soup.findAll("script"):
     try:
@@ -117,6 +122,7 @@ if rcontent.find('<meta name="generator" content=') != -1:
         WordPress += i
         count +=1
     WordPress = WordPress.split('WordPress ')[1].split('"')[0]
+    version = WordPress.split(" ")[1]
 
 elif rcontent.find('<meta name=generator content=') != -1:
     index = rcontent.find('<meta name=generator content=')
@@ -125,6 +131,7 @@ elif rcontent.find('<meta name=generator content=') != -1:
         WordPress += i
         count +=1
     WordPress = WordPress.split('WordPress ')[1].split('"')[0]
+    version = WordPress.split(" ")[1]
 else:
     count = 0
     if scriptSRCList:
@@ -132,12 +139,19 @@ else:
             if scriptSRCList[count].find("wp-content") != -1:
                 WordPress = True
             count += 1
-print("WordPress: ",WordPress)
+    version = ''
+
+output["jslib"].append({"name":"WordPress",
+                    "version":version,
+                    "description":"WordPress est un système de gestion de contenu gratuit, libre et open-source. Ce logiciel écrit en PHP repose sur une base de données MySQL et est distribué par la fondation WordPress.org.",
+                    "logo":"https://seeklogo.com/images/W/wordpress-logo-9F351E1870-seeklogo.com.png"
+                    })
 
 # Google Analytics
 if rcontent.find("Google Analytics") != -1:
     print("Google Analytics: Find")
 
+print(output)
 
 
 

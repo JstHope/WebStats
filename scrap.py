@@ -1,14 +1,13 @@
 # Importer les librairies utilisées
-from ensurepip import version
 import requests
 from bs4 import BeautifulSoup
-
 
 # trouver wp: <meta name=generator content="WordPress 4.9.8"> <meta name="generator" content="WordPress 4.9.8">
 
 # Définir la page à scraper
 URL = "https://lcplanta.ch"
 SSL = URL[:URL.find("://")]
+DOMAIN = URL.split("/")[2].split(".")[-2]
 # Raccourcir la requête en une variable
 r = requests.get(URL)
 rcontent = str(r.content)
@@ -17,9 +16,7 @@ soup = BeautifulSoup(r.content, "html5lib")
 
 black_list = ['https://developer.mozilla.org']
 white_list = ["Google Analytics"]
-###
-###     SRC
-###
+
 scriptSRCList = []
 
 # Faire une liste avec les attributs SRC des éléments script
@@ -53,7 +50,7 @@ for link in scriptSRCList:
     try:
         if link[0] != '/':
             output = link.split('/')[2].split(".")[-2]
-            if output not in domains:
+            if output not in domains and output != DOMAIN:
                 domains.append(output)
     except:
         print(f"{link} n'a pas de domains")

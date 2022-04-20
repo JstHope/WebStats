@@ -6,6 +6,9 @@ from bs4 import BeautifulSoup
 URL = "https://www.nasa.gov/"
 SSL = URL[:URL.find("://")]
 DOMAIN = URL.split("/")[2].split(".")[-2]
+
+if URL[-1] == "/":
+    URL = URL[:-1]
 # Raccourcir la requête en une variable
 r = requests.get(URL)
 rcontent = str(r.content)
@@ -28,6 +31,8 @@ for scriptSoups in soup.findAll("script"):
     try:
         if str(scriptSoups["src"])[0:2] == '//':
             scriptSRCList.append(SSL + ":",scriptSoups["src"])
+        elif str(scriptSoups["src"])[0] == '/':
+            scriptSRCList.append(URL + scriptSoups["src"])     
         else:
             scriptSRCList.append(scriptSoups["src"])
 
@@ -83,7 +88,7 @@ print(domains)
 print(raw_lib)
 
 
-""" 
+
 # trouve les lib importé
 def find_all(a_str, sub):
     start = 0
@@ -107,8 +112,7 @@ for src in scriptSRCList:
                 endimport +=1
 
     except:
-        print("Script sans attribut SRC")
-"""
+        print("Script sans attribut SRC: ",src)
 
 # Wordpress finder
 WordPress = ''

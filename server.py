@@ -9,10 +9,9 @@ app = web.Application()
 # Attache notre application web a notre serveur
 sio.attach(app)
 
-# Pour retourner le index.html de manière envoyable pour le serveur
+# Pour retourner le index.html
 def index(request):
-     with open('static/index.html') as f:
-         return web.Response(text=f.read(), content_type='text/html')
+    return web.FileResponse('static/index.html')
 
 
 #ajout d'un fichier statique

@@ -1,14 +1,13 @@
 # Importer les librairies utilisées
-from ensurepip import version
-import requests
+import requests,googlesearch
 from bs4 import BeautifulSoup
-
 
 # trouver wp: <meta name=generator content="WordPress 4.9.8"> <meta name="generator" content="WordPress 4.9.8">
 
 # Définir la page à scraper
-URL = "https://lcplanta.ch"
+URL = "https://admin.ch"
 SSL = URL[:URL.find("://")]
+DOMAIN = URL.split("/")[2].split(".")[-2]
 # Raccourcir la requête en une variable
 r = requests.get(URL)
 rcontent = str(r.content)
@@ -17,10 +16,14 @@ soup = BeautifulSoup(r.content, "html5lib")
 
 black_list = ['https://developer.mozilla.org']
 white_list = ["Google Analytics"]
-###
-###     SRC
-###
+
 scriptSRCList = []
+
+#trouve le serveur si il est donné dans les heaters de la reponse
+try:
+    output = [{"Server":r.headers['Server']}]
+except:
+    output = [{"Server":"Inconnu"}]
 
 # Faire une liste avec les attributs SRC des éléments script
 for scriptSoups in soup.findAll("script"):
@@ -52,9 +55,9 @@ for link in scriptSRCList:
     # liste les domains utilisé
     try:
         if link[0] != '/':
-            output = link.split('/')[2].split(".")[-2]
-            if output not in domains:
-                domains.append(output)
+            raw_output = link.split('/')[2].split(".")[-2]
+            if raw_output not in domains and raw_output != DOMAIN:
+                domains.append(raw_output)
     except:
         print(f"{link} n'a pas de domains")
 
@@ -63,20 +66,20 @@ for link in scriptSRCList:
         lib = link.split("/")[link.count("/")]
         version = " version=" + lib.split(".js?ver=")[1]
         if lib.find(".min.js?ver=") != -1:
-            output = lib.split(".min.js?ver=")[0] + " js" + version
+            raw_output = lib.split(".min.js?ver=")[0] + " js" + version
         else:
-            output = lib.split(".js?ver=")[0] + " js" + version
-        if output not in raw_lib:
-            raw_lib.append(output)
+            raw_output = lib.split(".js?ver=")[0] + " js" + version
+        if raw_output not in raw_lib:
+            raw_lib.append(raw_output)
 
         
     elif (link.find(".js") != -1 or link.find(".css") != -1) and link.find(".json") == -1:
         lib = link.split("/")[link.count("/")]
         if link.split("/")[-2].split(".")[0].isdigit() == True:
             version = " version=" + link.split("/")[-2]
-        output = lib.split(".")[0] + " " + lib.split(".")[-1] + version
-        if output not in raw_lib:
-            raw_lib.append(output)
+        raw_output = lib.split(".")[0] + " " + lib.split(".")[-1] + version
+        if raw_output not in raw_lib:
+            raw_lib.append(raw_output)
 
 print(domains)
 print(raw_lib)
@@ -119,7 +122,8 @@ if rcontent.find('<meta name="generator" content=') != -1:
         i = rcontent[index + count]
         WordPress += i
         count +=1
-    WordPress = WordPress.split('WordPress ')[1].split('"')[0]
+    version = WordPress.split('WordPress ')[1].split('"')[0]
+    WordPress = True
 
 elif rcontent.find('<meta name=generator content=') != -1:
     index = rcontent.find('<meta name=generator content=')
@@ -127,19 +131,69 @@ elif rcontent.find('<meta name=generator content=') != -1:
         i = rcontent[index + count]
         WordPress += i
         count +=1
-    WordPress = WordPress.split('WordPress ')[1].split('"')[0]
+    version = WordPress.split('WordPress ')[1].split('"')[0]
+    WordPress = True
 else:
     count = 0
     if scriptSRCList:
-        while WordPress != True or count < len(scriptSRCList):
+        while WordPress != True and count < len(scriptSRCList):
             if scriptSRCList[count].find("wp-content") != -1:
                 WordPress = True
             count += 1
-print("WordPress: ",WordPress)
-# Google Analytics
+    version = ''
 
+if WordPress == True:
+    print('WordPress ',version)
+    output.append({"name":"WordPress",
+                    "version":version,
+                    "description":"WordPress est un système de gestion de contenu gratuit, libre et open-source. Ce logiciel écrit en PHP repose sur une base de données MySQL et est distribué par la fondation WordPress.org.",
+                    "logo":"https://seeklogo.com/images/W/wordpress-logo-9F351E1870-seeklogo.com.png"
+                    })
+
+# Google Analytics
 if rcontent.find("Google Analytics") != -1:
     print("Google Analytics: Find")
+    output.append({"name":"WordPress",
+                    "version":version,
+                    "description":"WordPress est un système de gestion de contenu gratuit, libre et open-source. Ce logiciel écrit en PHP repose sur une base de données MySQL et est distribué par la fondation WordPress.org.",
+                    "logo":"https://seeklogo.com/images/W/wordpress-logo-9F351E1870-seeklogo.com.png"
+                    })
+
+print(output)
+
+
+
+
+## chercher les infos a afficher + chercher si pas faux résultats
+# on commence par les domains: 
+
+#si ya pas de wikipedia
+for domain in domains:
+    try:
+        search = list(googlesearch.search(domain,lang="fr"))
+        site = str(requests.get(search[0]).content)
+        debut = site.find('<meta name="description" content=')
+        count = 34
+        result = ''
+        k = ''
+        while k != '>':
+            k = site[debut + count]
+            count +=1
+            result += k
+        result = result[:-2]
+        print("source: ",search[0])
+        print(result,"\n")
+    except:
+        print("Trop de requetes")
+
+
+
+
+
+
+
+
+
 
 
 

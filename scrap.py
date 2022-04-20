@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 # trouver wp: <meta name=generator content="WordPress 4.9.8"> <meta name="generator" content="WordPress 4.9.8">
 
 # Définir la page à scraper
-URL = "https://lcplanta.ch"
+URL = "https://admin.ch"
 SSL = URL[:URL.find("://")]
 DOMAIN = URL.split("/")[2].split(".")[-2]
 # Raccourcir la requête en une variable
@@ -19,7 +19,11 @@ white_list = ["Google Analytics"]
 
 scriptSRCList = []
 
-output = []
+#trouve le serveur si il est donné dans les heaters de la reponse
+try:
+    output = [{"Server":r.headers['Server']}]
+except:
+    output = [{"Server":"Inconnu"}]
 
 # Faire une liste avec les attributs SRC des éléments script
 for scriptSoups in soup.findAll("script"):

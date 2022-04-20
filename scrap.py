@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 # trouver wp: <meta name=generator content="WordPress 4.9.8"> <meta name="generator" content="WordPress 4.9.8">
 
 # Définir la page à scraper
-URL = "https://admin.ch"
+URL = "https://www.nasa.gov/"
 SSL = URL[:URL.find("://")]
 DOMAIN = URL.split("/")[2].split(".")[-2]
 # Raccourcir la requête en une variable
@@ -116,7 +116,7 @@ for src in scriptSRCList:
 WordPress = ''
 i=''
 count = 0
-if rcontent.find('<meta name="generator" content=') != -1:
+if rcontent.find('<meta name="generator" content=') != -1 and rcontent.find("WordPress") != -1:
     index = rcontent.find('<meta name="generator" content=')
     while i != '>':
         i = rcontent[index + count]
@@ -125,7 +125,7 @@ if rcontent.find('<meta name="generator" content=') != -1:
     version = WordPress.split('WordPress ')[1].split('"')[0]
     WordPress = True
 
-elif rcontent.find('<meta name=generator content=') != -1:
+elif rcontent.find('<meta name=generator content=') != -1 and rcontent.find("WordPress") != -1:
     index = rcontent.find('<meta name=generator content=')
     while i != '>':
         i = rcontent[index + count]

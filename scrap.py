@@ -2,8 +2,6 @@
 import requests,googlesearch
 from bs4 import BeautifulSoup
 
-# trouver wp: <meta name=generator content="WordPress 4.9.8"> <meta name="generator" content="WordPress 4.9.8">
-
 # Définir la page à scraper
 URL = "https://www.nasa.gov/"
 SSL = URL[:URL.find("://")]

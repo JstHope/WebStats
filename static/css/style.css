@@ -68,6 +68,19 @@ h6 {
   font-size: var(--step-0);
 }
 
+
+/* Behavior */
+html {
+	scroll-snap-type: mandatory;
+  scroll-snap-points-y: repeat(100vh);
+  scroll-snap-type: y mandatory;
+  scroll-snap-stop: always;
+}
+section {
+  scroll-snap-align: start;
+}
+
+
 /* Layout */
 body {
   padding: 1rem;

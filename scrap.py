@@ -2,24 +2,6 @@
 import requests,googlesearch
 from bs4 import BeautifulSoup
 
-# Définir la page à scraper
-URL = "https://fr.pornhub.com"
-SSL = URL[:URL.find("://")]
-DOMAIN = URL.split("/")[2].split(".")[-2]
-
-if URL[-1] == "/":
-    URL = URL[:-1]
-# Raccourcir la requête en une variable
-r = requests.get(URL)
-rcontent = str(r.content)
-# Récupérer et parser le code source de la page
-soup = BeautifulSoup(r.content, "html5lib")
-
-black_list = ['https://developer.mozilla.org']
-white_list = ["Google Analytics"]
-
-scriptSRCList = []
-
 # Préfixer les liens sans HTTP(S)
 # Faire une liste avec les attributs SRC des éléments script
 def Find_All_SRC(soup):
@@ -54,10 +36,10 @@ def Find_All_HREF(soup):
     return scriptHREFList
 
 # Trouver les min.js
-def clean_link():
+def clean_link(all_link):
     raw_lib = []
     domains = []
-    for link in scriptSRCList:
+    for link in all_link:
         version = ''
         # Lister les domaines utilisés
         try:
@@ -117,10 +99,16 @@ def find_imported_lib(link_list):
 
         except:
             print("Script sans attribut SRC: ",src)
-    return imported_lib
+    # clean les output pour enlever les erreurs
+    clean_imported_lib = []
+    for lib in imported_lib:
+        if not set('[~!@#$%^&*()_+{}":;\']+$').intersection(lib):
+            clean_imported_lib.append(lib)
+    return clean_imported_lib
     
 
-def famous_lib_finder():
+def famous_lib_finder(r,all_link):
+    rcontent = str(r.content)
     output = []
     # Trouver le serveur si donné dans les headers de la réponse
     try:
@@ -151,9 +139,9 @@ def famous_lib_finder():
         WordPress = True
     else:
         count = 0
-        if scriptSRCList:
-            while WordPress != True and count < len(scriptSRCList):
-                if scriptSRCList[count].find("wp-content") != -1:
+        if all_link:
+            while WordPress != True and count < len(all_link):
+                if all_link[count].find("wp-content") != -1:
                     WordPress = True
                 count += 1
         version = ''
@@ -203,14 +191,48 @@ def search_result_on_google(domains):
             print("Trop de requetes")
 
 
+####################################################################################################################################
+####################################################################################################################################
+#MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN#
+####################################################################################################################################
+####################################################################################################################################
+#MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN#
+####################################################################################################################################
+####################################################################################################################################
+#MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN#
+####################################################################################################################################
+####################################################################################################################################
+
+
+        
+# Définir la page à scraper
+URL = "https://lcplanta.ch"
+SSL = URL[:URL.find("://")]
+DOMAIN = URL.split("/")[2].split(".")[-2]
+
+if URL[-1] == "/":
+    URL = URL[:-1]
+# Raccourcir la requête en une variable
+r = requests.get(URL)
+rcontent = str(r.content)
+# Récupérer et parser le code source de la page
+soup = BeautifulSoup(r.content, "html5lib")
+
+black_list = ['https://developer.mozilla.org']
+white_list = ["Google Analytics"]
 
 
 
 
 
+all_SRC = Find_All_SRC(soup)
+all_href = Find_All_HREF(soup)
+all_link = all_href + all_SRC
+domains,raw_lib = clean_link(all_link)
+imported_lib = find_imported_lib(all_link)
+famous_lib = famous_lib_finder(r,all_link)
 
 
+print(imported_lib)
 
 
-
-# go tout chercher sur ca https://www.npmjs.com/package/... ou equivalent voire si dl< nbr

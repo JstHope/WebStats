@@ -20,12 +20,13 @@ white_list = ["Google Analytics"]
 
 scriptSRCList = []
 
-#trouve le serveur si il est donné dans les heaters de la reponse
+# Trouver le serveur si donné dans les headers de la réponse
 try:
     output = [{"Server":r.headers['Server']}]
 except:
     output = [{"Server":"Inconnu"}]
 
+# Préfixer les liens sans HTTP(S)
 # Faire une liste avec les attributs SRC des éléments script
 for scriptSoups in soup.findAll("script"):
     try:
@@ -52,10 +53,11 @@ for scriptSoups in soup.findAll("link"):
 raw_lib = []
 domains = []
 print(scriptSRCList)
-# Trouve les min.js
+
+# Trouver les min.js
 for link in scriptSRCList:
     version = ''
-    # liste les domains utilisé
+    # Lister les domaines utilisés
     try:
         if link[0] != '/':
             raw_output = link.split('/')[2].split(".")[-2]
@@ -64,7 +66,7 @@ for link in scriptSRCList:
     except:
         print(f"{link} n'a pas de domains")
 
-    # cherche les noms d'extension dans les fichier js
+    # Chercher les noms d'extensions dans les fichiers JS
     if link.find(".js?ver=") != -1:
         lib = link.split("/")[link.count("/")]
         version = " version=" + lib.split(".js?ver=")[1]
@@ -75,7 +77,6 @@ for link in scriptSRCList:
         if raw_output not in raw_lib:
             raw_lib.append(raw_output)
 
-        
     elif (link.find(".js") != -1 or link.find(".css") != -1) and link.find(".json") == -1:
         lib = link.split("/")[link.count("/")]
         if link.split("/")[-2].split(".")[0].isdigit() == True:
@@ -89,14 +90,14 @@ print(raw_lib)
 
 
 
-# trouve les lib importé
+# Trouver les librairies importées
 def find_all(a_str, sub):
     start = 0
     while True:
         start = a_str.find(sub, start)
         if start == -1: return
         yield start
-        start += len(sub) # use start += 1 to find overlapping matches
+        start += len(sub) # utiliser start += 1 pour trouver les matchs qui se superposent
 
 for src in scriptSRCList:
     try:

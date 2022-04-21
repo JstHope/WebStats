@@ -105,7 +105,7 @@ section {
 
 
 /* Search */
-.searchbar form {
+.searchbar {
   position: relative;
   display: flex;
   width: clamp(17rem, 50vw, 45rem);
@@ -115,7 +115,7 @@ section {
   box-shadow: 2px 2px 10px rgba(0 0 0 / 25%);
   color: var(--inverted-surface);
 }
-.searchbar form > * {
+.searchbar > * {
   flex-grow: 1;
   flex-shrink: 1;
   border: none;

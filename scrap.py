@@ -103,7 +103,8 @@ def find_imported_lib(link_list):
     clean_imported_lib = []
     for lib in imported_lib:
         if not set('[~!@#$%^&*()_+{}":;\']+$').intersection(lib):
-            clean_imported_lib.append(lib)
+            clean_imported_lib.append(lib + " js")
+
     return clean_imported_lib
     
 
@@ -180,7 +181,7 @@ def famous_lib_finder(r,all_link):
 
         
 # Définir la page à scraper
-URL = "https://www.wikidot.com"
+URL = "https://lcplanta.ch"
 SSL = URL[:URL.find("://")]
 DOMAIN = URL.split("/")[2].split(".")[-2]
 
@@ -204,11 +205,10 @@ all_href = Find_All_HREF(soup)
 all_link = all_href + all_SRC
 
 domains,raw_lib = clean_link(all_link)
-""" 
 imported_lib = find_imported_lib(all_link)
-
- """
 famous_lib = famous_lib_finder(r,all_link)
 
-print(domains)
-infos = search(domains)
+print(imported_lib)
+infos = search(imported_lib)
+for info in infos:
+    print(info)

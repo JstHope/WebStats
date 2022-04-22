@@ -181,20 +181,20 @@ def famous_lib_finder(r,all_link):
 
         
 # Définir la page à scraper
-URL = "https://nasa.gov"
-SSL = URL[:URL.find("://")]
-DOMAIN = URL.split("/")[2].split(".")[-2]
+URL = "https://www.nasa.gov"
 
 if URL[-1] == "/":
     URL = URL[:-1]
-if URL[URL.find("://"):][0:4] != "www.":
-    URL = URL[:URL.find("://")] + "://www" + URL[URL.find("://"):]
-print(URL)
-# Raccourcir la requête en une variable
+
+
+SSL = URL[:URL.find("://")]
+DOMAIN = URL.split("/")[2].split(".")[-2]
+
 r = get(URL)
+
 rcontent = str(r.content)
 # Récupérer et parser le code source de la page
-soup = BeautifulSoup(r.content, "html5lib")
+soup = BeautifulSoup(rcontent, "html5lib")
 
 black_list = ['https://developer.mozilla.org']
 white_list = ["Google Analytics"]

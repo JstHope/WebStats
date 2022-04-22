@@ -1,5 +1,7 @@
 from aiohttp import web
+from requests import get
 import socketio,asyncio,json,os
+from requests.exceptions import Timeout
 
 ## Crée un serveur Async Socket IO 
 sio = socketio.AsyncServer()
@@ -15,9 +17,9 @@ def index(request):
 
 
 #ajout d'un fichier statique
-app.router.add_static('/css/',
-                       path='static/css',
-                       name='css')
+app.router.add_static('/styles/',
+                       path='static/styles',
+                       name='styles')
 app.router.add_static('/font/',
                        path='static/font',
                        name='font')
@@ -32,27 +34,63 @@ app.router.add_get('/', index)
 
 @sio.on("send link")
 async def send_all_data(sid,link):
-    # prend le cookie contenant le lien
+    r=''
     print(link)
+    # Test le SSL
 
-    # on fait une promesse en lancant le subprocess 
-    await asyncio.ensure_future(run_subprocess(link,sid))
+    if link[:link.find("://")] == 'https' or link[:link.find("://")] == 'http':
+        if link[link.find("://"):][3:7] != "www.":
+            link = link[:link.find("://")] + "://www." + link[link.find("://"):][3:]
+        try:
+            r = get(link, timeout=8)
+        except Timeout:
+                print('Timeout has been raised.')
+                await sio.emit("timeout",room=sid)
+        except:
+            print("invalid link")
+            await sio.emit("invalid link",room=sid)
+    else:
+        if link[0:4] != "www.":
+            link ="www." + link
+        try:
+            r = get("https://" + link, timeout=8)
+            link = "https://" + link
+        except Timeout:
+            print('Timeout has been raised.')
+            await sio.emit("timeout",room=sid)
+        except:
+            try:
+                r = get("http://" + link, timeout=8)
+                link = "http://" + link
+            except Timeout:
+                print('Timeout has been raised.')
+                await sio.emit("timeout",room=sid)
 
-    # ouvre le json crée
-    f = open(f'temp_subprocess_output/{sid}.json')
-    
-    # convertie le json en dictionnaire
-    data = json.load(f)
-    
-    # ferme le ficher
-    f.close()
+            except:
+                print("invalid link")
+                await sio.emit("invalid link",room=sid)
 
-    os.remove(f'temp_subprocess_output/{sid}.json')
+    if r != '':
+        if link[-1] == "/":
+            link = link[:-1]
+        # on fait une promesse en lancant le subprocess 
+        await asyncio.ensure_future(run_subprocess(link,sid))
 
-    
-    # envoie le resultat au client grace au socketid
-    await sio.emit('receive data',data,room=sid)
-    print(f'[Data sended to {sid}]\n\n')
+        # ouvre le json crée
+        f = open(f'temp_subprocess_output/{sid}.json')
+        
+        # convertie le json en dictionnaire
+        data = json.load(f)
+        
+        # ferme le ficher
+        f.close()
+
+        os.remove(f'temp_subprocess_output/{sid}.json')
+
+        
+        # envoie le resultat au client grace au socketid
+        await sio.emit('receive data',data,room=sid)
+        print(f'[Data sended to {sid}]\n\n')
     
 
 

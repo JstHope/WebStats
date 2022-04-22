@@ -1,7 +1,10 @@
 from aiohttp import web
 from requests import get
-import socketio,asyncio,json,os
+from os import remove
+from json import load
 from requests.exceptions import Timeout
+import socketio,asyncio
+
 
 ## Crée un serveur Async Socket IO 
 sio = socketio.AsyncServer()
@@ -80,12 +83,12 @@ async def send_all_data(sid,link):
         f = open(f'temp_subprocess_output/{sid}.json')
         
         # convertie le json en dictionnaire
-        data = json.load(f)
+        data = load(f)
         
         # ferme le ficher
         f.close()
 
-        os.remove(f'temp_subprocess_output/{sid}.json')
+        remove(f'temp_subprocess_output/{sid}.json')
 
         
         # envoie le resultat au client grace au socketid

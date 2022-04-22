@@ -58,12 +58,13 @@ def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
                 result_desc = soup.find('div', attrs={'class': 'g'})
                 description_box = result_desc.find('div', {'style': '-webkit-line-clamp:2'})
                 if description_box:
-                    description = description_box.find('span').text
+                    description = description_box.find_all('span')[-1].text
+                    
                 #trouve la source
                 source = soup.find('div', attrs={'class': 'g'}).find('a', href=True)["href"]
 
             except:
                 return False
-
-        output.append({"description":description,"image":"","source":source})
-    return(output)
+        if source.find("github.com") == -1 and source.find("https://developer.mozilla.org") == -1 : # faux positif
+            output.append({"name":term,"description":description,"image":"","source":source})
+    return output

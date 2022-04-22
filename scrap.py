@@ -102,7 +102,7 @@ def find_imported_lib(link_list):
     # clean les output pour enlever les erreurs
     clean_imported_lib = []
     for lib in imported_lib:
-        if not set('[~!@#$%^&*()_+{}":;\']+$').intersection(lib):
+        if not set('[~!@#$%^&*()_+{}":;\']+$').intersection(lib) and lib != '':
             clean_imported_lib.append(lib + " js")
 
     return clean_imported_lib

@@ -11,7 +11,7 @@ sio.attach(app)
 
 # Pour retourner le index.html
 def index(request):
-    return web.FileResponse('static/index.html')
+    return web.FileResponse(path='static/index.html', status=200)
 
 
 #ajout d'un fichier statique

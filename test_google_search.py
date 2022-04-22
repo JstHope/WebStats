@@ -18,16 +18,7 @@ def _req(term, results, lang, start, proxies):
     resp.raise_for_status()
     return resp
 
-class SearchResult:
-    def __init__(self, url, title, description):
-        self.url = url
-        self.title = title
-        self.description = description
-
-    def __repr__(self):
-        return f"SearchResult(url={self.url}, title={self.title}, description={self.description})"
-
-def search(term, num_results=10, lang="en", proxy=None, advanced=False):
+def search(term, num_results=10, lang="fr", proxy=None, advanced=False):
     escaped_term = term.replace(' ', '+')
 
     # Proxy
@@ -40,23 +31,41 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False):
     
     # Fetch
     start = 0
-    while start < num_results:
-        # Send request
-        resp = _req(escaped_term, num_results-start, lang, start, proxies)
+    # Send request
+    resp = _req(escaped_term, num_results-start, lang, start, proxies)
 
-        # Parse
-        soup = BeautifulSoup(resp.text, 'html.parser')
-        result_block = soup.find_all('div', attrs={'class': 'g'})
-        for result in result_block:
-            # Find link, title, description
-            link = result.find('a', href=True)
-            title = result.find('h3')
-            description_box = result.find('div', {'style': '-webkit-line-clamp:2'})
+    # Parse
+    soup = BeautifulSoup(resp.text, 'html.parser')
+
+    #find wikipedia desc
+    try:
+        result_desc = soup.find('div', attrs={'id': 'rhs'})
+        description_box = result_desc.find('div', {'class': 'kno-rdesc'})
+        ###image
+        images = soup.find_all('img')
+        for image in images:
+            if str(image.get("id"))[0:5] == "dimg_" or str(image.get("id"))[0:7] == "wp_thbn":
+                print("",end="")
+
+        description = description_box.find('span').text
+        source = "wikipedia"
+
+    # Find description du premier lien     
+    except:
+        try:
+            result_desc = soup.find('div', attrs={'class': 'g'})
+            description_box = result_desc.find('div', {'style': '-webkit-line-clamp:2'})
             if description_box:
-                description = description_box.find('span')
-                if link and title and description:
-                    start += 1
-                    if advanced:
-                        yield SearchResult(link['href'], title.text, description.text)
-                    else:
-                        yield link['href']
+                description = description_box.find('span').text
+            #trouve la source
+            source = soup.find('div', attrs={'class': 'g'}).find('a', href=True)["href"]
+
+        except:
+            return False
+
+    output = {"description":description,"image":"","source":source}
+    return(output)
+
+
+
+print(search("bs4"))

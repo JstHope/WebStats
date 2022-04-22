@@ -1,7 +1,7 @@
 # Importer les librairies utilisées
-import requests,googlesearch
+from requests import get
 from bs4 import BeautifulSoup
-
+from search_info_on_google import search
 # Préfixer les liens sans HTTP(S)
 # Faire une liste avec les attributs SRC des éléments script
 def Find_All_SRC(soup):
@@ -84,7 +84,7 @@ def find_imported_lib(link_list):
     imported_lib = []
     for src in link_list:
         try:
-            r = requests.get(src)
+            r = get(src)
             scriptLocateImport = list(find_all(str(r.content),"require("))
             for startimport in scriptLocateImport:
                 k = False
@@ -165,32 +165,6 @@ def famous_lib_finder(r,all_link):
 
     return output
 
-
-
-
-## chercher les infos a afficher + chercher si pas faux résultats
-# on commence par les domains: 
-#si ya pas de wikipedia
-def search_result_on_google(domains):
-    for domain in domains:
-        try:
-            search = list(googlesearch.search(domain,lang="fr"))
-            site = str(requests.get(search[0]).content)
-            debut = site.find('<meta name="description" content=')
-            count = 34
-            result = ''
-            k = ''
-            while k != '>':
-                k = site[debut + count]
-                count +=1
-                result += k
-            result = result[:-2]
-            print("source: ",search[0])
-            print(result,"\n")
-        except:
-            print("Trop de requetes")
-
-
 ####################################################################################################################################
 ####################################################################################################################################
 #MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN#
@@ -213,7 +187,7 @@ DOMAIN = URL.split("/")[2].split(".")[-2]
 if URL[-1] == "/":
     URL = URL[:-1]
 # Raccourcir la requête en une variable
-r = requests.get(URL)
+r = get(URL)
 rcontent = str(r.content)
 # Récupérer et parser le code source de la page
 soup = BeautifulSoup(r.content, "html5lib")
@@ -232,8 +206,9 @@ all_link = all_href + all_SRC
 domains,raw_lib = clean_link(all_link)
 """ 
 imported_lib = find_imported_lib(all_link)
-famous_lib = famous_lib_finder(r,all_link)
- """
-print(domains)
-search_result_on_google(domains)
 
+ """
+famous_lib = famous_lib_finder(r,all_link)
+
+print(domains)
+infos = search(domains)

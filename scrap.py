@@ -9,7 +9,7 @@ def Find_All_SRC(soup):
     for scriptSoups in soup.findAll("script"):
         try:
             if str(scriptSoups["src"])[0:2] == '//':
-                scriptSRCList.append(SSL + ":",scriptSoups["src"])
+                scriptSRCList.append(SSL + ":" + scriptSoups["src"])
             elif str(scriptSoups["src"])[0] == '/':
                 scriptSRCList.append(URL + scriptSoups["src"])     
             else:
@@ -25,7 +25,7 @@ def Find_All_HREF(soup):
     for scriptSoups in soup.findAll("link"):
         try:
             if str(scriptSoups["href"])[0:2] == '//':
-                scriptHREFList.append(SSL + ":",scriptSoups["href"])
+                scriptHREFList.append(SSL + ":" + scriptSoups["href"])
             elif str(scriptSoups["href"])[0] == '/':
                 scriptHREFList.append(URL + scriptSoups["href"])     
             else:
@@ -206,7 +206,7 @@ def search_result_on_google(domains):
 
         
 # Définir la page à scraper
-URL = "https://lcplanta.ch"
+URL = "https://www.wikidot.com"
 SSL = URL[:URL.find("://")]
 DOMAIN = URL.split("/")[2].split(".")[-2]
 
@@ -228,11 +228,12 @@ white_list = ["Google Analytics"]
 all_SRC = Find_All_SRC(soup)
 all_href = Find_All_HREF(soup)
 all_link = all_href + all_SRC
+
 domains,raw_lib = clean_link(all_link)
+""" 
 imported_lib = find_imported_lib(all_link)
 famous_lib = famous_lib_finder(r,all_link)
-
-
-print(imported_lib)
-
+ """
+print(domains)
+search_result_on_google(domains)
 

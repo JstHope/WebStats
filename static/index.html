@@ -84,19 +84,23 @@
     var input = document.getElementById("input_link")
     var result = document.getElementById("result")
     var pending = false
+    var format = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
+
 
     function send_link(){
       if (pending == false){
       inputval = input.value
-      if (inputval.indexOf(".") == -1){
-        console.log("invalid link")
+      if (inputval.indexOf(".") != -1 && inputval.match(format)){
+        socket.emit("send link", inputval);
+        pending = true;      
       }
       else{
-      socket.emit("send link", inputval);
-      pending = true;
-    }}
-  else{console.log("demande requete deja en cours...")}
-  }
+      console.log("invalid link")
+      }
+    }
+      else{
+        console.log("demande requete deja en cours...")}
+      }
 
     socket.on("receive data", (data)=>{
         console.log(data);

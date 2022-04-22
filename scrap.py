@@ -196,11 +196,7 @@ rcontent = str(r.content)
 # Récupérer et parser le code source de la page
 soup = BeautifulSoup(rcontent, "html5lib")
 
-black_list = ['https://developer.mozilla.org']
 white_list = ["Google Analytics"]
-
-
-
 
 
 all_SRC = Find_All_SRC(soup)
@@ -211,4 +207,5 @@ domains,raw_lib = clean_link(all_link)
 imported_lib = find_imported_lib(all_link)
 famous_lib = famous_lib_finder(r,all_link)
 
-print(famous_lib)
+print(search(imported_lib))
+

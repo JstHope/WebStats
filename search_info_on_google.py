@@ -65,6 +65,6 @@ def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
 
             except:
                 return False
-        if source.find("github.com") == -1 and source.find("https://developer.mozilla.org") == -1 : # faux positif
+        if source.find("github.com") == -1 and source.find("https://developer.mozilla.org") == -1 and source.find("'https://medium.com"): # faux positif
             output.append({"name":term,"description":description,"image":"","source":source})
     return output

@@ -23,6 +23,7 @@
   --accent-1: #00adb4;
   --accent-1-light: #5cdfe7;
   --accent-1-dark: #007d85;
+  --accent-2: limegreen;
 }
 
 
@@ -56,7 +57,12 @@ h2 {
   font-size: var(--step-4);
 }
 h3 {
+  display: inline-block;
   font-size: var(--step-3);
+  color: transparent;
+  background: var(--accent-2);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 h4 {
   font-size: var(--step-2);
@@ -121,6 +127,7 @@ section {
   border: none;
   font-size: var(--step-0);
   font-family: var(--body-font);
+  color: var(--inverted-surface);
 }
 .searchbar__input {
   padding: 0.125rem 20% 0.125rem 1.5rem;
@@ -134,14 +141,21 @@ section {
   inset: 0 0 0 auto;
   min-width: 20%;
   padding: 0.125rem 0.5rem 0.125rem 1rem;
-  background-color: var(--accent-1-light);
 	border-radius: 0 100vh 100vh 0;
   font-weight: bold;
   transition: 300ms ease-in-out;
+  /* Background animé */
+  background: var(--accent-2);
+  background-size: 200%;
+  background-position: left;
+}
+.searchbar__button:hover {
+  cursor: pointer;
 }
 .searchbar__button:hover,
 .searchbar__button:focus {
   background-color: var(--accent-1);
+  background-position: right;
 }
 .searchbar__button:focus {
   transform: scale(1.05);
@@ -228,9 +242,26 @@ section {
 @media(prefers-color-scheme: dark) {
   :root {
     --inverted-surface: #f2f2f2;
-    --surface: #285253;
+    --surface: #0f0f0f;
     --accent-1: #00383a;
     --accent-1-light: #3e8385;
-    --accent-1-dark: #02003a;
+    --accent-1-dark: #171717;
+    --accent-2-1: hsla(360, 86%, 67%, 1);
+    --accent-2-2: hsla(303, 79%, 76%, 1);
+    --accent-2: linear-gradient(90deg, var(--accent-2-1),  var(--accent-2-2));
+    /* https://coolors.co/gradient-maker/f292ed-f36364*/
+  }
+  body {
+    background: var(--accent-1-dark);
+  }
+  .searchbar__button {
+    color: var(--surface);
+  }
+  .searchbar,
+  .output {
+    border: 2px solid var(--accent-2-1);
+  }
+  .output-entry {
+    border-bottom: 2px solid var(--accent-2-2);
   }
 }

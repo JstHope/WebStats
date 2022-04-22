@@ -1,7 +1,11 @@
 # Importer les librairies utilisées
 from requests import get
 from bs4 import BeautifulSoup
-from search_info_on_google import search
+
+
+from urllib.request import Request
+from urllib.request import urlopen
+from urllib import parse
 # Préfixer les liens sans HTTP(S)
 # Faire une liste avec les attributs SRC des éléments script
 def Find_All_SRC(soup):
@@ -166,6 +170,93 @@ def famous_lib_finder(r,all_link):
 
     return output
 
+################## cherche le logo sur google image ##################
+def search_image_google(query):
+    search = parse.quote(query)
+    url = f'https://www.google.com/search?q={search}+logo&espv=2&biw=1366&bih=667&site=webhp&source=lnms&tbm=isch&sa=X&ei=XosDVaCXD8TasATItgE&ved=0CAcQ_AUoAg'
+    headers={}
+
+    headers['User-Agent'] = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
+    req = Request(url, headers=headers)
+    resp = urlopen(req)  
+    soup = BeautifulSoup(str(resp.read()),"html.parser")
+
+    images = soup.find_all("img")
+    return images[1]["src"]
+
+################################################################################################
+##################################### PARTIE GOOGLE SEARCH #####################################
+################################################################################################
+
+usr_agent = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
+
+def _req(term, results, lang, start, proxies):
+    resp = get(
+        url="https://www.google.com/search",
+        headers=usr_agent,
+        params=dict(
+            q = term,
+            num = results + 2, # Prevents multiple requests
+            hl = lang,
+            start = start,
+        ),
+        proxies=proxies,
+    )
+    resp.raise_for_status()
+    return resp
+
+def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
+    output = []
+    for term in term_list:
+        escaped_term = term.replace(' ', '+')
+
+        # Proxy
+        proxies = None
+        if proxy:
+            if proxy[:5]=="https":
+                proxies = {"https": proxy} 
+            else:
+                proxies = {"http": proxy}
+        
+        # Fetch
+        start = 0
+        # Send request
+        resp = _req(escaped_term, num_results-start, lang, start, proxies)
+
+        # Parse
+        soup = BeautifulSoup(resp.text, 'html.parser')
+
+        #find wikipedia desc
+        try:
+            result_desc = soup.find('div', attrs={'id': 'rhs'})
+            description_box = result_desc.find('div', {'class': 'kno-rdesc'})
+            ###image
+            images = soup.find_all('img')
+            for image in images:
+                if str(image.get("id"))[0:5] == "dimg_" or str(image.get("id"))[0:7] == "wp_thbn":
+                    print("",end="")
+
+            description = description_box.find('span').text
+            source = "Wikipedia"
+
+        # Find description du premier lien     
+        except:
+            try:
+                result_desc = soup.find('div', attrs={'class': 'g'})
+                description_box = result_desc.find('div', {'style': '-webkit-line-clamp:2'})
+                if description_box:
+                    description = description_box.find_all('span')[-1].text
+                    
+                #trouve la source
+                source = soup.find('div', attrs={'class': 'g'}).find('a', href=True)["href"]
+
+            except:
+                return False
+        if source.find("github.com") == -1 and source.find("https://developer.mozilla.org") == -1 and source.find("'https://medium.com"): # faux positif
+            output.append({"name":term,"description":description,"image":search_image_google(term),"source":source})
+    return output
+
+
 ####################################################################################################################################
 ####################################################################################################################################
 #MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN#
@@ -202,8 +293,9 @@ white_list = ["Google Analytics"]
 all_SRC = Find_All_SRC(soup)
 all_href = Find_All_HREF(soup)
 all_link = all_href + all_SRC
-
+""" 
 domains,raw_lib = clean_link(all_link)
+ """
 imported_lib = find_imported_lib(all_link)
 famous_lib = famous_lib_finder(r,all_link)
 

@@ -50,7 +50,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
                     print("",end="")
 
             description = description_box.find('span').text
-            source = "wikipedia"
+            source = "Wikipedia"
 
         # Find description du premier lien     
         except:

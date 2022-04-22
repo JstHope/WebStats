@@ -181,12 +181,15 @@ def famous_lib_finder(r,all_link):
 
         
 # Définir la page à scraper
-URL = "https://lcplanta.ch"
+URL = "https://nasa.gov"
 SSL = URL[:URL.find("://")]
 DOMAIN = URL.split("/")[2].split(".")[-2]
 
 if URL[-1] == "/":
     URL = URL[:-1]
+if URL[URL.find("://"):][0:4] != "www.":
+    URL = URL[:URL.find("://")] + "://www" + URL[URL.find("://"):]
+print(URL)
 # Raccourcir la requête en une variable
 r = get(URL)
 rcontent = str(r.content)
@@ -208,7 +211,4 @@ domains,raw_lib = clean_link(all_link)
 imported_lib = find_imported_lib(all_link)
 famous_lib = famous_lib_finder(r,all_link)
 
-print(imported_lib)
-infos = search(imported_lib)
-for info in infos:
-    print(info)
+print(famous_lib)

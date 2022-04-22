@@ -1,2 +1,4 @@
-
+__pycache__/
 .ztr-directory
+*.pyc
+*.pyo

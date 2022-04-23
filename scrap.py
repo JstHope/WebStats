@@ -1,7 +1,7 @@
 # Importer les librairies utilisées
 from requests import get
 from bs4 import BeautifulSoup
-
+import time
 from urllib.request import Request
 from urllib.request import urlopen
 from urllib import parse
@@ -174,9 +174,8 @@ def famous_lib_finder(r,all_link):
 def search_image_google(query):
     search = parse.quote(query)
     url = f'https://www.google.com/search?q={search}+logo&espv=2&biw=1366&bih=667&site=webhp&source=lnms&tbm=isch&sa=X&ei=XosDVaCXD8TasATItgE&ved=0CAcQ_AUoAg'
-    headers={}
+    headers={'User-Agent':"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"}
 
-    headers['User-Agent'] = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
     req = Request(url, headers=headers)
     resp = urlopen(req)  
     soup = BeautifulSoup(str(resp.read()),"html.parser")
@@ -206,9 +205,11 @@ def _req(term, results, lang, start, proxies):
     return resp
 
 def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
+    start_time = time.time()
     description = ''
     output = []
     for term in term_list:
+        error = False
         escaped_term = term.replace(' ', '+')
 
         # Proxy
@@ -252,9 +253,11 @@ def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
                 source = soup.find('div', attrs={'class': 'g'}).find('a', href=True)["href"]
 
             except:
-                return False
-        if source.find("github.com") == -1 and source.find("https://developer.mozilla.org") == -1 and source.find("'https://medium.com"): # faux positif
+                error = True
+        if error == False and source.find("github.com") == -1 and source.find("https://developer.mozilla.org") == -1 and source.find("'https://medium.com"): # faux positif
             output.append({"name":term,"description":description,"image":search_image_google(term),"source":source})
+
+    print("--- %s seconds ---" % (time.time() - start_time))
     return output
 
 
@@ -271,7 +274,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
 ####################################################################################################################################
 
 
-        
+
 # Définir la page à scraper
 URL = "https://www.lcplanta.ch"
 
@@ -283,7 +286,7 @@ SSL = URL[:URL.find("://")]
 DOMAIN = URL.split("/")[2].split(".")[-2]
 
 r = get(URL)
-
+print(r.status_code)
 if r.status_code != 200:
     URL = URL.split("://")[0] + "://" +  URL.split("://")[1][4:]
     r = get(URL)
@@ -305,7 +308,4 @@ domains,raw_lib = clean_link(all_link)
 
 famous_lib = famous_lib_finder(r,all_link)
 
-final_output = famous_lib + search(domains)
-
-print(final_output)
-print(raw_lib)
+final_output = famous_lib + search(raw_lib)

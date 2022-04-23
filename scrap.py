@@ -2,10 +2,10 @@
 from requests import get
 from bs4 import BeautifulSoup
 
-
 from urllib.request import Request
 from urllib.request import urlopen
 from urllib import parse
+
 # Préfixer les liens sans HTTP(S)
 # Faire une liste avec les attributs SRC des éléments script
 def Find_All_SRC(soup):
@@ -206,6 +206,7 @@ def _req(term, results, lang, start, proxies):
     return resp
 
 def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
+    description = ''
     output = []
     for term in term_list:
         escaped_term = term.replace(' ', '+')
@@ -272,7 +273,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
 
         
 # Définir la page à scraper
-URL = "https://www.nasa.gov"
+URL = "https://www.lcplanta.ch"
 
 if URL[-1] == "/":
     URL = URL[:-1]
@@ -282,6 +283,11 @@ SSL = URL[:URL.find("://")]
 DOMAIN = URL.split("/")[2].split(".")[-2]
 
 r = get(URL)
+
+if r.status_code != 200:
+    URL = URL.split("://")[0] + "://" +  URL.split("://")[1][4:]
+    r = get(URL)
+
 
 rcontent = str(r.content)
 # Récupérer et parser le code source de la page
@@ -293,11 +299,13 @@ white_list = ["Google Analytics"]
 all_SRC = Find_All_SRC(soup)
 all_href = Find_All_HREF(soup)
 all_link = all_href + all_SRC
-""" 
 domains,raw_lib = clean_link(all_link)
- """
-imported_lib = find_imported_lib(all_link)
+
+# imported_lib = find_imported_lib(all_link) # cassé
+
 famous_lib = famous_lib_finder(r,all_link)
 
-print(search(imported_lib))
+final_output = famous_lib + search(domains)
 
+print(final_output)
+print(raw_lib)

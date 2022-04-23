@@ -190,21 +190,32 @@ def search_image_google(query):
 usr_agent = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
 
 def _req(term, results, lang, start, proxies):
-    resp = get(
-        url="https://www.google.com/search",
-        headers=usr_agent,
-        params=dict(
-            q = term,
-            num = results + 2, # Prevents multiple requests
-            hl = lang,
-            start = start,
-        ),
-        proxies=proxies,
-    )
-    resp.raise_for_status()
+    while True:
+        resp = get(
+            url="https://www.google.com/search",
+            headers=usr_agent,
+            params=dict(
+                q = term,
+                num = results + 2, # Prevents multiple requests
+                hl = lang,
+                start = start,
+            ),
+            proxies={"http": "http://50.192.250.60:8080"},
+        )
+        if resp.status_code == 429:
+            print("spam pas stp")
+            time.sleep(2)
+        else:
+            print("requet pass :D")
+            break
+
+    try:
+        resp.raise_for_status()
+    except:
+        print("trop de requetes a google")
     return resp
 
-def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
+def search(term_list, num_results=10, lang="fr", proxy=None):
     start_time = time.time()
     description = ''
     output = []
@@ -213,7 +224,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
         escaped_term = term.replace(' ', '+')
 
         # Proxy
-        proxies = None
+        proxies = ''
         if proxy:
             if proxy[:5]=="https":
                 proxies = {"https": proxy} 
@@ -309,3 +320,4 @@ domains,raw_lib = clean_link(all_link)
 famous_lib = famous_lib_finder(r,all_link)
 
 final_output = famous_lib + search(raw_lib)
+print(final_output)

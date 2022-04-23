@@ -5,7 +5,7 @@ import time
 from urllib.request import Request
 from urllib.request import urlopen
 from urllib import parse
-
+import asyncio
 # Préfixer les liens sans HTTP(S)
 # Faire une liste avec les attributs SRC des éléments script
 def Find_All_SRC(soup):
@@ -40,10 +40,10 @@ def Find_All_HREF(soup):
     return scriptHREFList
 
 # Trouver les min.js
-def clean_link(all_link):
+def clean_link(all_links):
     raw_lib = []
     domains = []
-    for link in all_link:
+    for link in all_links:
         version = ''
         # Lister les domaines utilisés
         try:
@@ -74,7 +74,7 @@ def clean_link(all_link):
                 raw_lib.append(raw_output)
     return domains,raw_lib
 
-#retourne tout les mots recherché dans un text 
+# Retourne tout les mots recherchés dans un texte 
 def find_all(a_str, sub):
     start = 0
     while True:
@@ -103,7 +103,7 @@ def find_imported_lib(link_list):
 
         except:
             print("Script sans attribut SRC: ",src)
-    # clean les output pour enlever les erreurs
+    # Nettoyer les outputs pour enlever les erreurs
     clean_imported_lib = []
     for lib in imported_lib:
         if not set('[~!@#$%^&*()_+{}":;\']+$').intersection(lib) and lib != '':
@@ -112,7 +112,7 @@ def find_imported_lib(link_list):
     return clean_imported_lib
     
 
-def famous_lib_finder(r,all_link):
+def famous_lib_finder(r,all_links):
     rcontent = str(r.content)
     output = []
     # Trouver le serveur si donné dans les headers de la réponse
@@ -121,7 +121,7 @@ def famous_lib_finder(r,all_link):
     except:
         output = [{"Server":"Inconnu"}]
 
-    # Wordpress finder
+    # Détecteur de Wordpress
     WordPress = ''
     i=''
     count = 0
@@ -144,9 +144,9 @@ def famous_lib_finder(r,all_link):
         WordPress = True
     else:
         count = 0
-        if all_link:
-            while WordPress != True and count < len(all_link):
-                if all_link[count].find("wp-content") != -1:
+        if all_links:
+            while WordPress != True and count < len(all_links):
+                if all_links[count].find("wp-content") != -1:
                     WordPress = True
                 count += 1
         version = ''
@@ -170,7 +170,8 @@ def famous_lib_finder(r,all_link):
 
     return output
 
-################## cherche le logo sur google image ##################
+################## Chercher le logo sur Google images ##################
+
 def search_image_google(query):
     search = parse.quote(query)
     url = f'https://www.google.com/search?q={search}+logo&espv=2&biw=1366&bih=667&site=webhp&source=lnms&tbm=isch&sa=X&ei=XosDVaCXD8TasATItgE&ved=0CAcQ_AUoAg'
@@ -189,13 +190,13 @@ def search_image_google(query):
 
 usr_agent = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
 
-def _req(term, results, lang, start, proxies):
+async def _req(term, results, lang, start, proxies):
     resp = get(
         url="https://www.google.com/search",
         headers=usr_agent,
         params=dict(
             q = term,
-            num = results + 2, # Prevents multiple requests
+            num = results + 2, # Empêcher les requêtes multiples
             hl = lang,
             start = start,
         ),
@@ -204,7 +205,7 @@ def _req(term, results, lang, start, proxies):
     resp.raise_for_status()
     return resp
 
-def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
+async def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
     start_time = time.time()
     description = ''
     output = []
@@ -222,13 +223,13 @@ def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
         
         # Fetch
         start = 0
-        # Send request
-        resp = _req(escaped_term, num_results-start, lang, start, proxies)
+        # Envoyer request
+        resp = await asyncio.create_task(_req(escaped_term, num_results-start, lang, start, proxies))
 
         # Parse
         soup = BeautifulSoup(resp.text, 'html.parser')
 
-        #find wikipedia desc
+        # Trouver la description Wikipédia
         try:
             result_desc = soup.find('div', attrs={'id': 'rhs'})
             description_box = result_desc.find('div', {'class': 'kno-rdesc'})
@@ -241,7 +242,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
             description = description_box.find('span').text
             source = "Wikipedia"
 
-        # Find description du premier lien     
+        # Trouver le description du premier lien     
         except:
             try:
                 result_desc = soup.find('div', attrs={'class': 'g'})
@@ -249,7 +250,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None, advanced=False):
                 if description_box:
                     description = description_box.find_all('span')[-1].text
                     
-                #trouve la source
+                # Trouver la source
                 source = soup.find('div', attrs={'class': 'g'}).find('a', href=True)["href"]
 
             except:
@@ -299,13 +300,16 @@ soup = BeautifulSoup(rcontent, "html5lib")
 white_list = ["Google Analytics"]
 
 
-all_SRC = Find_All_SRC(soup)
-all_href = Find_All_HREF(soup)
-all_link = all_href + all_SRC
-domains,raw_lib = clean_link(all_link)
+async def main(soup):
+    all_SRC = Find_All_SRC(soup)
+    all_href = Find_All_HREF(soup)
+    all_links = all_href + all_SRC
+    domains,raw_lib = clean_link(all_links)
 
-# imported_lib = find_imported_lib(all_link) # cassé
+    # imported_lib = find_imported_lib(all_links) # cassé
 
-famous_lib = famous_lib_finder(r,all_link)
+    famous_lib = famous_lib_finder(r,all_links)
 
-final_output = famous_lib + search(raw_lib)
+    final_output = famous_lib + await search(raw_lib)
+
+asyncio.run(main(soup))

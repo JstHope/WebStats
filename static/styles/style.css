@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /*
-    cd C:\Users\eliot\OneDrive\Documents\Études\OC Informatique\Projet Python\WebStats\static\styles
+    C:\Users\eliot\OneDrive\Documents\Études\OC Informatique\Projet Python\WebStats\static\styles
     sass --watch style.scss style.css
 */
 /* Fonts
@@ -44,11 +44,6 @@ img {
 }
 
 /* Elements */
-hr {
-  border: none;
-  background: var(--accent-2);
-}
-
 h1,
 h2,
 h3,
@@ -145,7 +140,7 @@ section {
   color: var(--inverted-surface);
 }
 .searchbar__input {
-  padding: 0.125rem 1.5rem;
+  padding: 0.125rem 20% 0.125rem 1.5rem;
   border-right: none;
   background-color: var(--surface);
   border-radius: 100vh;
@@ -161,7 +156,7 @@ section {
   transition: 300ms ease-in-out;
   /* Background animé */
   background: var(--accent-2);
-  background-size: 300%;
+  background-size: 200%;
   background-position: left;
 }
 .searchbar__button :hover {
@@ -169,6 +164,7 @@ section {
 }
 .searchbar__button :hover,
 .searchbar__button :focus {
+  background-color: var(--accent-1);
   background-position: right;
 }
 .searchbar__button :focus {
@@ -186,6 +182,9 @@ section {
   border-radius: 3px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
   color: var(--inverted-surface);
+  /*&--empty {
+    display: none;
+  }*/
 }
 .output-couvercle {
   align-content: start;
@@ -198,18 +197,6 @@ section {
 }
 .output-couvercle--open {
   display: none;
-}
-.output-category__entry {
-  padding: 0.75rem 0.5rem;
-  font-size: var(--step-0);
-}
-.output-category__entry__firstline {
-  display: flex;
-  flex-wrap: wrap;
-}
-.output-category__entry__firstline > * {
-  flex-grow: 1;
-  flex-shrink: 1;
 }
 
 .loading {
@@ -224,6 +211,15 @@ section {
   width: 80px;
   height: 80px;
   border-radius: 100vh;
+}
+
+.output-entry {
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+  font-size: var(--step-0);
+}
+.output-entry :last-of-type {
+  border-bottom: none;
 }
 
 @keyframes openCouvercle {
@@ -263,6 +259,10 @@ section {
 
   .searchbar__button {
     color: var(--surface);
+  }
+
+  .output-entry {
+    border-bottom: 2px solid var(--accent-2-2);
   }
 }
 /*# sourceMappingURL=style.scss.map */

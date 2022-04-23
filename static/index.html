@@ -41,22 +41,6 @@
           </div>
         </div>
         <p id="result">test</p>
-<<<<<<< Updated upstream
-        <div class="output-entry">
-          <h3>Placeholder</h3>
-          <div class="output-content">
-            <span class="js-libs"><b>Librairies JavaScript :</b> Placeholder</span>
-            <br>
-            <span class="css-classes"><b>Classes CSS :</b> Placeholder</span>
-            <br>
-            <span class="resources"><b>Autres ressources :</b></span>
-          </div>
-          <div class="output-logo">
-            <img src="" alt="Logo de la libraire {$truc}" class="output-logo">
-          </div>
-        </div>
-=======
->>>>>>> Stashed changes
 
         <h3>Librairies JavaScript</h3>
         <div class="output-category">
@@ -65,19 +49,15 @@
             <div class="output-category__entry__firstline">
               <h4 class="output-category__entry__firstline__title">Nom de la librairie</h3>
               <div class="output-category__entry__firstline__logo">
-                <img src="" alt="Logo de la librairie" class="output-category__entry__firstline__logo__image">
+                <img src="https://s.w.org/style/images/about/WordPress-logotype-wmark.png" alt="Logo de la librairie" class="output-category__entry__firstline__logo__image">
               </div>
             </div>
-            <p class="output-entry__infos">
-              <span class="js-libs"><b>Librairies JavaScript :</b> Placeholder</span>
-              <br>
-              <span class="css-classes"><b>Classes CSS :</b> Placeholder</span>
-              <br>
-              <span class="resources"><b>Autres ressources :</b></span>
+            <p class="output-category__entry__infos">
+              Description ici. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea, quos accusamus facilis aspernatur. Consequuntur, repudiandae.
             </p>
           </div>
           <hr>
-          
+
         </div>
 
       </div>
@@ -99,7 +79,7 @@
       inputval = input.value
       if (inputval.indexOf(".") != -1 && inputval.match(format)){
         socket.emit("send link", inputval);
-        pending = true;      
+        pending = true;
       }
       else{
       console.log("invalid link")

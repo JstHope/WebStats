@@ -90,9 +90,9 @@ h6 {
 
 /* Behavior */
 html {
-  scroll-snap-type: mandatory;
+  scroll-snap-type: proximity;
   scroll-snap-points-y: repeat(100vh);
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: y proximity;
   scroll-snap-stop: always;
 }
 
@@ -183,7 +183,7 @@ section {
   position: relative;
   max-width: 90%;
   margin-inline: auto;
-  padding: 1rem 2rem;
+  padding: calc(0.8rem + 0.5vw) calc(1.25rem + 1vw);
   background-color: var(--surface);
   border: 2px solid rgba(0, 0, 0, 0.6);
   border-radius: 3px;
@@ -213,10 +213,17 @@ section {
       &__firstline {
         display: flex;
         flex-wrap: wrap;
+        place-content: center;
+        place-items: center;
 
         > * {
           flex-grow: 1;
           flex-shrink: 1;
+        }
+        &__logo {
+          flex-basis: 100px;
+          max-width: 120px;
+          aspect-ratio: 1/1;
         }
       }
     }

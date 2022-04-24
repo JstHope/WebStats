@@ -61,16 +61,17 @@ def clean_link(all_link):
                 raw_output = lib.split(".min.js?ver=")[0] + " js" + version
             else:
                 raw_output = lib.split(".js?ver=")[0] + " js" + version
-            if raw_output not in raw_lib:
-                raw_lib.append(raw_output)
+
 
         elif (link.find(".js") != -1 or link.find(".css") != -1) and link.find(".json") == -1:
             lib = link.split("/")[link.count("/")]
             if link.split("/")[-2].split(".")[0].isdigit() == True:
                 version = " version=" + link.split("/")[-2]
             raw_output = lib.split(".")[0] + " " + lib.split(".")[-1] + version
-            if raw_output not in raw_lib:
-                raw_lib.append(raw_output)
+
+        if raw_output not in raw_lib:
+            raw_lib.append(raw_output)
+            
     return domains,raw_lib
 
 #retourne tout les mots recherché dans un text 
@@ -262,8 +263,14 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
 
             except:
                 error = True
-        if error == False and source.find("github.com") == -1 and source.find("https://developer.mozilla.org") == -1 and source.find("'https://medium.com"): # faux positif
-            output.append({"name":term,"description":description,"logo":search_image_google(term),"source":source})
+            site = True
+            for black_site in BLACK_LIST:
+                if source.find(black_site) != -1:
+                    site = False
+                    break
+
+            if error == False and site == True:
+                output.append({"name":term,"description":description,"logo":search_image_google(term),"source":source})
 
     return output
 
@@ -279,6 +286,9 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
 #MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN#
 ####################################################################################################################################
 ####################################################################################################################################
+
+BLACK_LIST = ["medium.com","github.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
+
 
 sid = argv[2]
 URL = argv[1]

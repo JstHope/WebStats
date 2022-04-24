@@ -40,22 +40,9 @@
             <div class="loading__ball loading__ball--3"></div>
           </div>
         </div>
-        <p id="result">test</p>
-
         <h3>Librairies JavaScript</h3>
-        <div class="output-category">
+        <div class="output-category" id="output_js_lib"></div>
 
-          <div class="output-category__entry">
-            <div class="output-category__entry__firstline">
-              <h4 class="output-category__entry__firstline__title">Nom de la librairie</h3>
-              <div class="output-category__entry__firstline__logo">
-                <img src="https://s.w.org/style/images/about/WordPress-logotype-wmark.png" alt="Logo de la librairie" class="output-category__entry__firstline__logo__image">
-              </div>
-            </div>
-            <p class="output-category__entry__infos">
-              Description ici. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea, quos accusamus facilis aspernatur. Consequuntur, repudiandae.
-            </p>
-          </div>
           <hr>
 
         </div>
@@ -65,45 +52,5 @@
   </body>
 
   <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
-
-  <script>
-    const socket = io();
-    var input = document.getElementById("input_link")
-    var result = document.getElementById("result")
-    var pending = false
-    var format = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
-
-
-    function send_link(){
-      if (pending == false){
-      inputval = input.value
-      if (inputval.indexOf(".") != -1 && inputval.match(format)){
-        socket.emit("send link", inputval);
-        pending = true;
-      }
-      else{
-      console.log("invalid link")
-      }
-    }
-      else{
-        console.log("demande requete deja en cours...")}
-      }
-
-    socket.on("receive data", (data)=>{
-        console.log(data);
-        result.innerHTML = data['link'];
-        pending = false;
-    });
-
-    socket.on("invalid link", ()=>{
-        console.log("invalid link");
-        pending = false;
-    });
-
-    socket.on("timeout", ()=>{
-        console.log("timeout");
-        pending = false;
-    });
-
-  </script>
+  <script type="text/javascript" src="js/index.js"></script>
 </html>

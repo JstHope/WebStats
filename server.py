@@ -29,7 +29,9 @@ app.router.add_static('/font/',
 app.router.add_static('/resources/',
                        path='static/resources',
                        name='resources')
-
+app.router.add_static('/js/',
+                       path='static/js',
+                       name='js')
 #met une redirection sur / a notre fichier html 
 app.router.add_get('/', index)
 
@@ -79,16 +81,15 @@ async def send_all_data(sid,link):
         # on fait une promesse en lancant le subprocess 
         await asyncio.ensure_future(run_subprocess(link,sid))
 
-        # ouvre le json crée
-        f = open(f'temp_subprocess_output/{sid}.json')
+        # ouvre le txt crée
+        f = open(f'temp_subprocess_output/{sid}.txt','r',encoding="utf-8")
         
-        # convertie le json en dictionnaire
-        data = load(f)
-        
+        # convertie le text en array de dictionnaire
+        data = eval(f.read())
         # ferme le ficher
         f.close()
-
-        remove(f'temp_subprocess_output/{sid}.json')
+        
+        remove(f'temp_subprocess_output/{sid}.txt')
 
         
         # envoie le resultat au client grace au socketid
@@ -102,13 +103,13 @@ async def send_all_data(sid,link):
 async def run_subprocess(link,sid):
     print('/Starting subprocess')
     # on fait une promesse en créant un subprocess qui va executer le script de scrap 
-    proc = await asyncio.create_subprocess_exec('python', 'testasync.py',link,sid, stdout=asyncio.subprocess.PIPE)
+    proc = await asyncio.create_subprocess_exec('python', 'scrap.py',link,sid, stdout=asyncio.subprocess.PIPE)
     # on récupère l'output brut
     stdout, stderr = await proc.communicate()
     # la réponse est en bytes --> On convertit la réponse en string 
-    output = stdout.strip().decode('utf-8')
+    output = stdout.strip()
 
-    print('/Subprocess output: ' + output)
+    #print('/Subprocess output: ' + output)
     print(f'/Subprocess finished with return code {proc.returncode}')
 
 

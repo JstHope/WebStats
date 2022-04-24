@@ -5,6 +5,7 @@ import time
 from urllib.request import Request
 from urllib.request import urlopen
 from urllib import parse
+from sys import argv
 
 # Préfixer les liens sans HTTP(S)
 # Faire une liste avec les attributs SRC des éléments script
@@ -162,10 +163,9 @@ def famous_lib_finder(r,all_link):
     # Google Analytics
     if rcontent.find("Google Analytics") != -1:
         print("Google Analytics: Find")
-        output.append({"name":"WordPress",
-                        "version":version,
-                        "description":"WordPress est un système de gestion de contenu gratuit, libre et open-source. Ce logiciel écrit en PHP repose sur une base de données MySQL et est distribué par la fondation WordPress.org.",
-                        "logo":"https://seeklogo.com/images/W/wordpress-logo-9F351E1870-seeklogo.com.png"
+        output.append({"name":"Google Analytics",
+                        "description":f"Google Analytics est un service gratuit d'analyse d'audience d'un site Web ou d'applications utilisé par plus de 10 millions de sites, soit plus de 80 % du marché mondial.",
+                        "logo":"https://logowik.com/content/uploads/images/google-analytics-2020.jpg"
                         })
 
     return output
@@ -173,7 +173,7 @@ def famous_lib_finder(r,all_link):
 ################## cherche le logo sur google image ##################
 def search_image_google(query):
     search = parse.quote(query)
-    url = f'https://www.google.com/search?q={search}+logo&espv=2&biw=1366&bih=667&site=webhp&source=lnms&tbm=isch&sa=X&ei=XosDVaCXD8TasATItgE&ved=0CAcQ_AUoAg'
+    url = f'https://www.google.com/search?q={search}+icon&espv=2&biw=1366&bih=667&site=webhp&source=lnms&tbm=isch&sa=X&ei=XosDVaCXD8TasATItgE&ved=0CAcQ_AUoAg'
     headers={'User-Agent':"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"}
 
     req = Request(url, headers=headers)
@@ -200,7 +200,7 @@ def _req(term, results, lang, start, proxies):
                 hl = lang,
                 start = start,
             ),
-            proxies={"http": "http://50.192.250.60:8080"},
+            proxies=proxies,
         )
         if resp.status_code == 429:
             print("spam pas stp")
@@ -266,7 +266,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
             except:
                 error = True
         if error == False and source.find("github.com") == -1 and source.find("https://developer.mozilla.org") == -1 and source.find("'https://medium.com"): # faux positif
-            output.append({"name":term,"description":description,"image":search_image_google(term),"source":source})
+            output.append({"name":term,"description":description,"logo":search_image_google(term),"source":source})
 
     print("--- %s seconds ---" % (time.time() - start_time))
     return output
@@ -283,11 +283,10 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
 #MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN#
 ####################################################################################################################################
 ####################################################################################################################################
-
-
-
+sid = argv[2]
+URL = argv[1]
 # Définir la page à scraper
-URL = "https://www.lcplanta.ch"
+#URL = "https://www.lcplanta.ch"
 
 if URL[-1] == "/":
     URL = URL[:-1]
@@ -319,5 +318,11 @@ domains,raw_lib = clean_link(all_link)
 
 famous_lib = famous_lib_finder(r,all_link)
 
-final_output = famous_lib + search(raw_lib)
+final_output = famous_lib + search(domains)
 print(final_output)
+
+
+###
+fichier = open(f"temp_subprocess_output/{sid}.txt", "a", encoding="utf-8")
+fichier.write(str(final_output))
+fichier.close()

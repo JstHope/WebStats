@@ -83,13 +83,14 @@ async def send_all_data(sid,link):
 
         # ouvre le txt crée
         f = open(f'temp_subprocess_output/{sid}.txt','r',encoding="utf-8")
-        
         # convertie le text en array de dictionnaire
         data = eval(f.read())
         # ferme le ficher
         f.close()
-        
-        remove(f'temp_subprocess_output/{sid}.txt')
+        try:
+            remove(f'temp_subprocess_output/{sid}.txt')
+        except:
+            print("le fichier a suprimmer n'existe pas")
 
         
         # envoie le resultat au client grace au socketid

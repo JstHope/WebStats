@@ -1,12 +1,10 @@
 # Importer les librairies utilisées
 from requests import get
 from bs4 import BeautifulSoup
-import time
-from urllib.request import Request
-from urllib.request import urlopen
+from urllib.request import Request,urlopen
 from urllib import parse
 from sys import argv
-
+from time import sleep
 # Préfixer les liens sans HTTP(S)
 # Faire une liste avec les attributs SRC des éléments script
 def Find_All_SRC(soup):
@@ -204,7 +202,7 @@ def _req(term, results, lang, start, proxies):
         )
         if resp.status_code == 429:
             print("spam pas stp")
-            time.sleep(2)
+            sleep(2)
         else:
             print("requet pass :D")
             break
@@ -216,7 +214,6 @@ def _req(term, results, lang, start, proxies):
     return resp
 
 def search(term_list, num_results=10, lang="fr", proxy=None):
-    start_time = time.time()
     description = ''
     output = []
     for term in term_list:
@@ -268,7 +265,6 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
         if error == False and source.find("github.com") == -1 and source.find("https://developer.mozilla.org") == -1 and source.find("'https://medium.com"): # faux positif
             output.append({"name":term,"description":description,"logo":search_image_google(term),"source":source})
 
-    print("--- %s seconds ---" % (time.time() - start_time))
     return output
 
 
@@ -283,6 +279,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
 #MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN#
 ####################################################################################################################################
 ####################################################################################################################################
+
 sid = argv[2]
 URL = argv[1]
 # Définir la page à scraper
@@ -320,7 +317,7 @@ famous_lib = famous_lib_finder(r,all_link)
 
 final_output = famous_lib + search(domains)
 
-
+final_output[0]["url"] = URL
 ###
 fichier = open(f"temp_subprocess_output/{sid}.txt", "a", encoding="utf-8")
 fichier.write(str(final_output))

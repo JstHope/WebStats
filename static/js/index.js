@@ -2,6 +2,8 @@ const socket = io();
 var input = document.getElementById("input_link");
 var result = document.getElementById("result");
 var output_js = document.getElementById("output_js_lib");
+var urlname = document.getElementById("urlname");
+
 var pending = false
 var format = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
 
@@ -22,6 +24,7 @@ function send_link(){
 
 socket.on("receive data", (data)=>{
     console.log(data);
+    urlname.textContent = data[0]["url"]
     for(let i = 1; i<data.length;i++){
         // cree un entry objet 
         var entry = document.createElement('div');
@@ -53,8 +56,6 @@ socket.on("receive data", (data)=>{
         //////////////////////
 
         output_js.appendChild(entry)
-
-
     }
     pending = false;
 });

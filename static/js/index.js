@@ -3,6 +3,7 @@ var input = document.getElementById("input_link");
 var result = document.getElementById("result");
 var output_js = document.getElementById("output_js_lib");
 var urlname = document.getElementById("urlname");
+var output_section = document.getElementById("output-section");
 
 var pending = false
 var format = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
@@ -54,9 +55,11 @@ socket.on("receive data", (data)=>{
         desc.textContent = data[i]["description"]
         entry.appendChild(desc);
         //////////////////////
-
         output_js.appendChild(entry)
     }
+    output_section.style.display = "";
+    window.scrollTo(0,document.body.scrollHeight);
+    
     pending = false;
 });
 

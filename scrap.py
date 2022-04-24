@@ -173,7 +173,7 @@ def famous_lib_finder(r,all_link):
 ################## cherche le logo sur google image ##################
 def search_image_google(query):
     search = parse.quote(query)
-    url = f'https://www.google.com/search?q={search}+icon&espv=2&biw=1366&bih=667&site=webhp&source=lnms&tbm=isch&sa=X&ei=XosDVaCXD8TasATItgE&ved=0CAcQ_AUoAg'
+    url = f'https://www.google.com/search?q={search}+logo&espv=2&biw=1366&bih=667&site=webhp&source=lnms&tbm=isch&sa=X&ei=XosDVaCXD8TasATItgE&ved=0CAcQ_AUoAg'
     headers={'User-Agent':"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"}
 
     req = Request(url, headers=headers)

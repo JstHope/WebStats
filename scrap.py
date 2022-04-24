@@ -246,7 +246,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                 if str(image.get("id"))[0:5] == "dimg_" or str(image.get("id"))[0:7] == "wp_thbn":
                     print("",end="")
 
-            description = description_box.find('span').text
+            description = description_box.find_all('span')[-3].text
             source = "Wikipedia"
 
         # Find description du premier lien     
@@ -302,9 +302,6 @@ if r.status_code != 200:
 rcontent = str(r.content)
 # Récupérer et parser le code source de la page
 soup = BeautifulSoup(rcontent, "html5lib")
-
-white_list = ["Google Analytics"]
-
 
 all_SRC = Find_All_SRC(soup)
 all_href = Find_All_HREF(soup)

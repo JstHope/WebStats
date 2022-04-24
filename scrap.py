@@ -50,7 +50,7 @@ def clean_link(all_link):
         try:
             if link[0] != '/':
                 raw_output = link.split('/')[2].split(".")[-2]
-                if raw_output not in domains and raw_output != DOMAIN:
+                if raw_output not in domains and raw_output != DOMAIN and len(raw_output) > 1:
                     domains.append(raw_output)
         except:
             print(f"{link} n'a pas de domains")
@@ -319,7 +319,6 @@ domains,raw_lib = clean_link(all_link)
 famous_lib = famous_lib_finder(r,all_link)
 
 final_output = famous_lib + search(domains)
-print(final_output)
 
 
 ###

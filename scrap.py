@@ -75,7 +75,7 @@ def clean_link(all_link):
     return domains,raw_lib
 
 #retourne tout les mots recherché dans un text 
-def find_all(a_str, sub):
+def find_all_word(a_str, sub):
     start = 0
     while True:
         start = a_str.find(sub, start)
@@ -89,7 +89,7 @@ def find_imported_lib(link_list):
     for src in link_list:
         try:
             r = get(src)
-            scriptLocateImport = list(find_all(str(r.content),"require("))
+            scriptLocateImport = list(find_all_word(str(r.content),"require("))
             for startimport in scriptLocateImport:
                 k = False
                 endimport = startimport
@@ -309,20 +309,19 @@ if r.status_code != 200:
     r = get(URL)
 
 
-rcontent = str(r.content)
 # Récupérer et parser le code source de la page
-soup = BeautifulSoup(rcontent, "html5lib")
+soup = BeautifulSoup(r.content, "html5lib")
 
 all_SRC = Find_All_SRC(soup)
 all_href = Find_All_HREF(soup)
 all_link = all_href + all_SRC
 domains,raw_lib = clean_link(all_link)
 
-# imported_lib = find_imported_lib(all_link) # cassé
+imported_lib = find_imported_lib(all_link) # cassé
 
 famous_lib = famous_lib_finder(r,all_link)
 
-final_output = famous_lib + search(domains)
+final_output = famous_lib + search(domains) + search(imported_lib)
 
 final_output[0]["url"] = URL
 ###

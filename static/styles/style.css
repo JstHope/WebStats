@@ -90,9 +90,9 @@ h6 {
 
 /* Behavior */
 html {
-  scroll-snap-type: proximity;
+  scroll-snap-type: mandatory;
   scroll-snap-points-y: repeat(100vh);
-  scroll-snap-type: y proximity;
+  scroll-snap-type: y mandatory;
   scroll-snap-stop: always;
 }
 

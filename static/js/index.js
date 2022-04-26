@@ -14,6 +14,8 @@ function send_link(){
     if (inputval.indexOf(".") != -1 && inputval.match(format)){
     socket.emit("send link", inputval);
     pending = true;
+    output_js.replaceChildren();
+    output_section.style.display = "none"
     }
     else{
     console.log("invalid link")

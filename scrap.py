@@ -106,7 +106,7 @@ def find_imported_lib(link_list):
     # clean les output pour enlever les erreurs
     clean_imported_lib = []
     for lib in imported_lib:
-        if not set('[~!@#$%^&*()_+{}":;\']+$').intersection(lib) and lib != '':
+        if not set('[~!@#$%^&*()_+{}":;,\']+$').intersection(lib) and lib != '':
             clean_imported_lib.append(lib + " js")
 
     return clean_imported_lib
@@ -218,6 +218,11 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
     description = ''
     output = []
     for term in term_list:
+        version = ''
+        if term.find(" version=") != -1:
+            term,version = term.split(" version=")
+
+
         error = False
         escaped_term = term.replace(' ', '+')
 
@@ -270,7 +275,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                     break
 
             if error == False and site == True:
-                output.append({"name":term,"description":description,"logo":search_image_google(term),"source":source})
+                output.append({"name":term,"version":version,"description":description,"logo":search_image_google(term),"source":source})
 
     return output
 
@@ -293,7 +298,7 @@ BLACK_LIST = ["medium.com","github.com","developer.mozilla.org","checkwebsitetoo
 sid = argv[2]
 URL = argv[1]
 # Définir la page à scraper
-#URL = "https://www.lcplanta.ch"
+#URL = "https://www.wikidot.com"
 
 if URL[-1] == "/":
     URL = URL[:-1]
@@ -317,11 +322,11 @@ all_href = Find_All_HREF(soup)
 all_link = all_href + all_SRC
 domains,raw_lib = clean_link(all_link)
 
-imported_lib = find_imported_lib(all_link)
+#imported_lib = find_imported_lib(all_link)
 
 famous_lib = famous_lib_finder(r,all_link)
 
-final_output = famous_lib + search(domains) + search(imported_lib)
+final_output = famous_lib + search(domains) + search(raw_lib)
 
 final_output[0]["url"] = URL
 ###

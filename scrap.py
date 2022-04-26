@@ -317,7 +317,7 @@ all_href = Find_All_HREF(soup)
 all_link = all_href + all_SRC
 domains,raw_lib = clean_link(all_link)
 
-imported_lib = find_imported_lib(all_link) # cassé
+imported_lib = find_imported_lib(all_link)
 
 famous_lib = famous_lib_finder(r,all_link)
 

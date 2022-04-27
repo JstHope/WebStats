@@ -202,16 +202,16 @@ def _req(term, results, lang, start, proxies):
             proxies=proxies,
         )
         if resp.status_code == 429:
-            print("spam pas stp")
+            print("Google à bloqué la requète")
             sleep(2)
         else:
-            print("requet pass :D")
+            print("requete OK")
             break
 
     try:
         resp.raise_for_status()
     except:
-        print("trop de requetes a google")
+        print("Google à bloqué la requète")
     return resp
 
 def search(term_list, num_results=10, lang="fr", proxy=None):

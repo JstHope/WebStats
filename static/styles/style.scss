@@ -178,7 +178,32 @@ section {
 }
 
 
-/* Résultats */
+/* RÉSULTATS */
+.tabview {
+  display: grid;
+  grid-template-columns: (auto-fit, 15rem);
+
+  &__tab {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--accent-2-1);
+    border-radius: 5px 5px 0 0;
+    border-bottom: none;
+
+    ::before {
+      content: "";
+      width: 100px;
+      height: 100px;
+      transform: rotate(90deg);
+      border: 2px solid var(--accent-2-1);
+      border-width: 2px 2px 0 0;
+      transition: 220ms ease-in-out;
+    }
+    :hover::before {
+      transform: rotate(180deg);
+    }
+  }
+}
+
 .output {
   position: relative;
   max-width: 90%;

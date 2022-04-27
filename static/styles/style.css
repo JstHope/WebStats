@@ -8,8 +8,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Cabin:wght@700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 :root {
-/* Typescales
-  @link https://utopia.fyi/type/calculator?c=320,18,1.2,1140,22,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l */
+  /* Typescales
+    @link https://utopia.fyi/type/calculator?c=320,18,1.2,1140,22,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l */
   --step--2: clamp(0.78rem, calc(0.74rem + 0.19vw), 0.88rem);
   --step--1: clamp(0.94rem, calc(0.87rem + 0.32vw), 1.10rem);
   --step-0: clamp(1.13rem, calc(1.03rem + 0.49vw), 1.38rem);
@@ -175,7 +175,30 @@ section {
   transform: scale(1.05);
 }
 
-/* Résultats */
+/* RÉSULTATS */
+.tabview {
+  display: grid;
+  grid-template-columns: auto-fit, 15rem;
+}
+.tabview__tab {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--accent-2-1);
+  border-radius: 5px 5px 0 0;
+  border-bottom: none;
+}
+.tabview__tab ::before {
+  content: "";
+  width: 100px;
+  height: 100px;
+  transform: rotate(90deg);
+  border: 2px solid var(--accent-2-1);
+  border-width: 2px 2px 0 0;
+  transition: 220ms ease-in-out;
+}
+.tabview__tab :hover::before {
+  transform: rotate(180deg);
+}
+
 .output {
   position: relative;
   max-width: 90%;

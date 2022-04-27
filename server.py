@@ -23,15 +23,15 @@ def index(request):
 app.router.add_static('/styles/',
                        path='static/styles',
                        name='styles')
-app.router.add_static('/font/',
-                       path='static/font',
-                       name='font')
+app.router.add_static('/fonts/',
+                       path='static/fonts',
+                       name='fonts')
 app.router.add_static('/resources/',
                        path='static/resources',
                        name='resources')
-app.router.add_static('/js/',
-                       path='static/js',
-                       name='js')
+app.router.add_static('/scripts/',
+                       path='static/scripts',
+                       name='scripts')
 #met une redirection sur / a notre fichier html 
 app.router.add_get('/', index)
 

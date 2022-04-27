@@ -26,6 +26,7 @@ function send_link(){
     }
 
 socket.on("receive data", (data)=>{
+    pending = false;
     console.log(data);
     urlname.textContent = data[0]["url"]
     for(let i = 1; i<data.length;i++){
@@ -58,11 +59,11 @@ socket.on("receive data", (data)=>{
         entry.appendChild(desc);
         //////////////////////
         output_js.appendChild(entry)
+        output_js.appendChild(document.createElement("hr"))
+
     }
     output_section.style.display = "";
     window.scrollTo(0,document.body.scrollHeight);
-    
-    pending = false;
 });
 
 socket.on("invalid link", ()=>{

@@ -216,6 +216,7 @@ def _req(term, results, lang, start, proxies):
 
 def search(term_list, num_results=10, lang="fr", proxy=None):
     description = ''
+    source = ''
     output = []
     for term in term_list:
         version = ''
@@ -252,6 +253,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                 if str(image.get("id"))[0:5] == "dimg_" or str(image.get("id"))[0:7] == "wp_thbn":
                     print("",end="")
 
+            print(term)
             description = description_box.find_all('span')[-3].text
             source = "Wikipedia"
 
@@ -298,7 +300,7 @@ BLACK_LIST = ["medium.com","github.com","developer.mozilla.org","checkwebsitetoo
 sid = argv[2]
 URL = argv[1]
 # Définir la page à scraper
-#URL = "https://www.wikidot.com"
+#URL = "https://lcp.ictvs.ch/moodle"
 
 if URL[-1] == "/":
     URL = URL[:-1]

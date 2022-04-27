@@ -180,7 +180,10 @@ def search_image_google(query):
     soup = BeautifulSoup(str(resp.read()),"html.parser")
 
     images = soup.find_all("img")
-    return images[1]["src"]
+    try:
+        return images[1]["src"]
+    except:
+        return ""
 
 ################################################################################################
 ##################################### PARTIE GOOGLE SEARCH #####################################
@@ -215,11 +218,12 @@ def _req(term, results, lang, start, proxies):
     return resp
 
 def search(term_list, num_results=10, lang="fr", proxy=None):
-    description = ''
-    source = ''
     output = []
     for term in term_list:
         version = ''
+        description = ''
+        source = ''
+
         if term.find(" version=") != -1:
             term,version = term.split(" version=")
 
@@ -324,11 +328,11 @@ all_href = Find_All_HREF(soup)
 all_link = all_href + all_SRC
 domains,raw_lib = clean_link(all_link)
 
-#imported_lib = find_imported_lib(all_link)
+imported_lib = find_imported_lib(all_link)
 
 famous_lib = famous_lib_finder(r,all_link)
 
-final_output = famous_lib + search(domains) + search(raw_lib)
+final_output = famous_lib + search(domains) + search(imported_lib)
 
 final_output[0]["url"] = URL
 ###

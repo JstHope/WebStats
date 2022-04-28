@@ -163,16 +163,35 @@ section {
     background: var(--accent-2);
     background-size: 300%;
     background-position: left;
+    cursor: pointer;
 
-    :hover {
-      cursor: pointer;
+    &:hover {
+      transform: scale(1.125);
     }
-    :hover,
-    :focus {
+    &:hover,
+    &:focus {
       background-position: right;
     }
-    :focus {
+    &:focus {
       transform: scale(1.05);
+    }
+  }
+
+  /* Après clic */
+  &--clicked {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 100%;
+    animation: transformButton 150ms ease-in-out;
+
+    > * {
+      width: 10rem;
+      height: 10rem;
+      border-radius: 100%;
+    }
+    .searchbar__button {
+      --surface: transparent;
+      clip-path: none;
     }
   }
 }
@@ -214,20 +233,6 @@ section {
   border-radius: 3px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
   color: var(--inverted-surface);
-
-  &-couvercle {
-    align-content: start;
-    position: absolute;
-    inset: 0;
-    background: var(--surface);
-    transform-origin: left center;
-    border: 1px solid black;
-    /*animation: openCouvercle 4s ease-in-out infinite;*/
-
-    &--open {
-      display: none;
-    }
-  }
 
   &-category {
 
@@ -272,15 +277,12 @@ section {
 }
 
 
-
-@keyframes openCouvercle {
+@keyframes transformButton {
   0% {
     transform: rotate(0deg);
-    transform: rotateY(0deg);
   }
   100% {
     transform: rotate(20deg);
-    transform: rotateY(90deg);
   }
 }
 

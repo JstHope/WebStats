@@ -22,9 +22,6 @@ def index(request):
 app.router.add_static('/styles/',
                        path='static/styles',
                        name='styles')
-app.router.add_static('/fonts/',
-                       path='static/fonts',
-                       name='fonts')
 app.router.add_static('/resources/',
                        path='static/resources',
                        name='resources')

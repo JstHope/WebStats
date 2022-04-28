@@ -48,7 +48,7 @@ def clean_link(all_link):
         # Lister les domaines utilisés
         try:
             if link[0] != '/':
-                raw_output = link.split('/')[2].split(".")[-2]
+                raw_output = link.split('/')[2].split(".")[-2] + "." + link.split('/')[2].split(".")[-1]
                 if raw_output not in domains and raw_output != DOMAIN and len(raw_output) > 1:
                     domains.append(raw_output)
         except:

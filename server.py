@@ -1,7 +1,6 @@
 from aiohttp import web
 from requests import get
 from os import remove
-from json import load
 from requests.exceptions import Timeout
 import socketio,asyncio
 

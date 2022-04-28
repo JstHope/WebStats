@@ -5,6 +5,7 @@ from urllib.request import Request,urlopen
 from urllib import parse
 from sys import argv
 from time import sleep
+
 # Préfixer les liens sans HTTP(S)
 # Faire une liste avec les attributs SRC des éléments script
 def Find_All_SRC(soup):
@@ -74,7 +75,7 @@ def clean_link(all_link):
             
     return domains,raw_lib
 
-#retourne tout les mots recherché dans un text 
+# Retourne tout les mots recherchés dans un texte 
 def find_all_word(a_str, sub):
     start = 0
     while True:
@@ -102,8 +103,8 @@ def find_imported_lib(link_list):
                     endimport +=1
 
         except:
-            print("Script sans attribut SRC: ",src)
-    # clean les output pour enlever les erreurs
+            print("Script sans attribut SRC : ",src)
+    # clean les outputs pour enlever les erreurs
     clean_imported_lib = []
     for lib in imported_lib:
         if not set('[~!@#$%^&*()_+{}":;,\']+$').intersection(lib) and lib != '':
@@ -121,7 +122,7 @@ def famous_lib_finder(r,all_link):
     except:
         output = [{"Server":"Inconnu"}]
 
-    # Wordpress finder
+    # Détection Wordpress
     WordPress = ''
     i=''
     count = 0
@@ -169,7 +170,7 @@ def famous_lib_finder(r,all_link):
 
     return output
 
-################## cherche le logo sur google image ##################
+################## Cherche le logo sur google image ##################
 def search_image_google(query):
     search = parse.quote(query)
     url = f'https://www.google.com/search?q={search}+logo&espv=2&biw=1366&bih=667&site=webhp&source=lnms&tbm=isch&sa=X&ei=XosDVaCXD8TasATItgE&ved=0CAcQ_AUoAg'
@@ -205,16 +206,16 @@ def _req(term, results, lang, start, proxies):
             proxies=proxies,
         )
         if resp.status_code == 429:
-            print("Google à bloqué la requète")
+            print("Google a bloqué la requète")
             sleep(2)
         else:
-            print("requete OK")
+            print("Requête OK")
             break
 
     try:
         resp.raise_for_status()
     except:
-        print("Google à bloqué la requète")
+        print("Google a bloqué la requête")
     return resp
 
 def search(term_list, num_results=10, lang="fr", proxy=None):

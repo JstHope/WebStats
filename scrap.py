@@ -337,6 +337,7 @@ final_output = famous_lib + search(domains) + search(imported_lib)
 
 final_output[0]["url"] = URL
 ###
+print("done")
 fichier = open(f"temp_subprocess_output/{sid}.txt", "a", encoding="utf-8")
 fichier.write(str(final_output))
 fichier.close()

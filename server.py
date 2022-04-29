@@ -104,9 +104,9 @@ async def run_subprocess(link,sid):
     # on récupère l'output brut
     stdout, stderr = await proc.communicate()
     # la réponse est en bytes --> On convertit la réponse en string 
-    #output = stdout.strip()
+    output = str(stdout.strip())
 
-    #print('/Subprocess output: ' + output)
+    print('/Subprocess output: ' + output)
     print(f'/Subprocess finished with return code {proc.returncode}')
 
 

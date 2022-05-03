@@ -102,10 +102,6 @@ async def run_subprocess(link,sid):
     # on fait une promesse en créant un subprocess qui va executer le script de scrap 
     proc = await asyncio.create_subprocess_exec('python', 'scrap.py',link,sid, stdout=asyncio.subprocess.PIPE)
     # on récupère l'output brut
-    async for line in proc.stdout:
-        # streaming process data
-        print(line.decode())
-
     stdout, stderr = await proc.communicate()
     # la réponse est en bytes --> On convertit la réponse en string 
     output = str(stdout.strip())

@@ -3,7 +3,7 @@ from requests import get
 from os import remove
 from requests.exceptions import Timeout
 import socketio,asyncio
-
+from time import sleep
 
 ## Crée un serveur Async Socket IO 
 sio = socketio.AsyncServer()
@@ -25,9 +25,9 @@ app.router.add_static('/styles/',
 app.router.add_static('/resources/',
                        path='static/resources',
                        name='resources')
-app.router.add_static('/scripts/',
-                       path='static/scripts',
-                       name='scripts')
+app.router.add_static('/js/',
+                       path='static/js',
+                       name='js')
 #met une redirection sur / a notre fichier html 
 app.router.add_get('/', index)
 
@@ -76,7 +76,6 @@ async def send_all_data(sid,link):
             link = link[:-1]
         # on fait une promesse en lancant le subprocess 
         await asyncio.ensure_future(run_subprocess(link,sid))
-
         # ouvre le txt crée
         f = open(f'temp_subprocess_output/{sid}.txt','r',encoding="utf-8")
         # convertie le text en array de dictionnaire
@@ -101,6 +100,10 @@ async def run_subprocess(link,sid):
     print('/Starting subprocess')
     # on fait une promesse en créant un subprocess qui va executer le script de scrap 
     proc = await asyncio.create_subprocess_exec('python', 'scrap.py',link,sid, stdout=asyncio.subprocess.PIPE)
+    """     
+    loading_sender(sid,sio)
+    await proc
+     """
     # on récupère l'output brut
     stdout, stderr = await proc.communicate()
     # la réponse est en bytes --> On convertit la réponse en string 
@@ -110,8 +113,19 @@ async def run_subprocess(link,sid):
     print(f'/Subprocess finished with return code {proc.returncode}')
 
 
-
-
+""" 
+async def loading_sender(sid,sio):
+    line = ""
+    last_val = ""
+    while line != "done":
+        sleep(0.5)
+        f = open(f"./temp_subprocess_output/test.txt","r",encoding="utf-8")
+        line = f.readline()
+        if last_val != line:
+            print(line)
+            last_val = line
+            await sio.emit("loading",line,room=sid)
+ """
 
 # lancement du serveur
 if __name__ == '__main__':

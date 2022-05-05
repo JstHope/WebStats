@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" type="image/png" href="resources/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="resources/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="resources/favicon-96x96.png" sizes="96x96">
+  <meta property="og:title" content="WebStats">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://192.168.1.108:8080/">
+  <meta property="og:image" content="https://cdn.discordapp.com/attachments/486928125931028481/964932667781046292/logo_transparent.png">
+  <title>WebStats</title>
+
+  <link rel="stylesheet" href="styles/style.css">
+  <script src="https://kit.fontawesome.com/a7ae4740fa.js" crossorigin="anonymous"></script><style media="all" id="fa-v4-font-face">
+</head>
+
+  <body>
+
+
+    <section id="search-section">
+      <h2>Recherche</h2>
+      <div class="searchbar">
+        <input type="text" id="input_link" class="searchbar__input" placeholder="Insérez une URL..." aria-label="Choisir le lien de la page web à inspecter">
+        <button onclick="send_link()" class="searchbar__button">Rechercher</button>
+      </div>
+    </section>
+
+    <section id="output-section" style="">
+      <h2>Résultats</h2>
+      <div class="output-category__entry"><div class="output-category__entry__firstline"><h4 class="output-category__entry__firstline__title">cloudfront.net</h4><div class="output-category__entry__firstline__logo"><img class="output-category__entry__firstline__logo__image" alt="Logo de la librairie" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjHn-IOCB2POT8wWttpZopzt0Xe50hbZc33d3rLlMfB4Q0VWqaayqreFg2zw&amp;s"></div></div><p class="output-category__entry__infos">Amazon CloudFront ist ein Webservice, mit dem Sie statische und dynamische Web-Inhalte wie HTML-, CSS-, .js- und Bilddateien schneller für Ihre Benutzer&nbsp;...</p></div><h6 id="urlname">https://www.wikidot.com</h6>
+      <div class="output">
+
+        <div class="tabview">
+          <h3 class="tabview__tab">Librairies JavaScript</h3>
+          <h3 class="tabview__tab">Classes CSS</h3>
+          <h3 class="tabview__tab">Domaines reliés</h3>
+        </div>
+
+        <div class="output-category" id="output_js_lib"><div class="output-category__entry"><div class="output-category__entry__firstline"><h4 class="output-category__entry__firstline__title">Google Analytics</h4><div class="output-category__entry__firstline__logo"><img class="output-category__entry__firstline__logo__image" alt="Logo de la librairie" src="https://logowik.com/content/uploads/images/google-analytics-2020.jpg"></div></div><p class="output-category__entry__infos">Google Analytics est un service gratuit d'analyse d'audience d'un site Web ou d'applications utilisé par plus de 10 millions de sites, soit plus de 80 % du marché mondial.</p></div><section id="opening-section">
+      <img src="resources/logo.svg" class="logo">
+      <h1>WebStats</h1>
+    </section><hr><hr><div class="output-category__entry"><div class="output-category__entry__firstline"><h4 class="output-category__entry__firstline__title">wikidot.com</h4><div class="output-category__entry__firstline__logo"><img class="output-category__entry__firstline__logo__image" alt="Logo de la librairie" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGL1f5KudBDr0tWsVdWasWTL6qzbKYQj72xI5hqowlmWfUUCJw34GMUATtZA&amp;s"></div></div><p class="output-category__entry__infos">It's simply a place to build wiki-based websites. Use it to publish content, share your documents, collaborate with friends or coworkers, create a place for&nbsp;...</p></div><hr><div class="output-category__entry"><div class="output-category__entry__firstline"><h4 class="output-category__entry__firstline__title">onesignal.com</h4><div class="output-category__entry__firstline__logo"><img class="output-category__entry__firstline__logo__image" alt="Logo de la librairie" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS5coMEXPo1dupkF3_C7tbegAeloqkoWUrqPpKccJh30yxP_ffZg_9rJpWFRU&amp;s"></div></div><p class="output-category__entry__infos">OneSignal integrates with leading analytics, CMS, and eCommerce solutions including Amplitude, Mixpanel, Segment, HubSpot, Shopify, WordPress, and many more.</p></div><hr><div class="output-category__entry"><div class="output-category__entry__firstline"><h4 class="output-category__entry__firstline__title">facebook.net</h4><div class="output-category__entry__firstline__logo"><img class="output-category__entry__firstline__logo__image" alt="Logo de la librairie" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGRzkO5TSOxrFRrECDbLf0UIVyVO21g3YfZLAIr42yizZYzRvrXNmNk_T7Eg&amp;s"></div></div><p class="output-category__entry__infos">Create an account or log into Facebook. Connect with friends, family and other people you know. Share photos and videos, send messages and get updates.</p></div><hr></div>
+
+        </div>
+
+
+    </section>
+
+
+  <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+  <script type="text/javascript" src="scripts/index.js"></script>
+
+</body>
+</html>

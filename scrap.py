@@ -5,6 +5,7 @@ from urllib.request import Request,urlopen
 from urllib import parse
 from sys import argv
 from time import sleep
+import time
 import pymongo
 # Préfixer les liens sans HTTP(S)
 # Faire une liste avec les attributs SRC des éléments script
@@ -52,7 +53,7 @@ def clean_link(all_link):
                 if raw_output not in domains and raw_output != DOMAIN and len(raw_output) > 1:
                     domains.append(raw_output)
         except:
-            print(f"{link} n'a pas de domains")
+            print(f"[INFO] {link} n'a pas de domains")
 
         # Chercher les noms d'extensions dans les fichiers JS
         if link.find(".js?ver=") != -1:
@@ -103,7 +104,7 @@ def find_imported_lib(link_list):
                     endimport +=1
 
         except:
-            print("Script sans attribut SRC : ",src)
+            print("[INFO] Script sans attribut SRC : ",src)
     # clean les outputs pour enlever les erreurs
     clean_imported_lib = []
     for lib in imported_lib:
@@ -264,11 +265,6 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                     result_desc = soup.find('div', attrs={'id': 'rhs'})
                     description_box = result_desc.find('div', {'class': 'kno-rdesc'})
                     ###image
-                    images = soup.find_all('img')
-                    for image in images:
-                        if str(image.get("id"))[0:5] == "dimg_" or str(image.get("id"))[0:7] == "wp_thbn":
-                            print("",end="")
-
                     print(term)
                     description = description_box.find_all('span')[-3].text
                     source = "Wikipedia"
@@ -338,19 +334,27 @@ if r.status_code != 200:
 # Récupérer et parser le code source de la page
 soup = BeautifulSoup(r.content, "html5lib")
 
+start_time = time.time()
+
 all_SRC = Find_All_SRC(soup)
+print("SRC --- %s seconds ---" % (time.time() - start_time))
+
 all_href = Find_All_HREF(soup)
+print("HREF--- %s seconds ---" % (time.time() - start_time))
+print("%10")
 all_link = all_href + all_SRC
+
 domains,raw_lib = clean_link(all_link)
-
+print("CL--- %s seconds ---" % (time.time() - start_time))
+print("%20")
 imported_lib = find_imported_lib(all_link)
-
+print("FIL --- %s seconds ---" % (time.time() - start_time))
+print("%60")
 famous_lib = famous_lib_finder(r,all_link)
-
+print("FLF--- %s seconds ---" % (time.time() - start_time))
+print("80")
 final_output = famous_lib + search(domains) + search(imported_lib)
-
-final_output[0]["url"] = URL
-###
+print("%100")
 print("done")
 fichier = open(f"temp_subprocess_output/{sid}.txt", "a", encoding="utf-8")
 fichier.write(str(final_output))

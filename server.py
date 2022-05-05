@@ -3,7 +3,8 @@ from requests import get
 from os import remove
 from requests.exceptions import Timeout
 import socketio,asyncio
-
+from time import sleep
+from asyncio import StreamReader
 ## Crée un serveur Async Socket IO 
 sio = socketio.AsyncServer()
 ## Crée une nouvelle application web Aiohttp
@@ -99,32 +100,18 @@ async def run_subprocess(link,sid):
     print('/Starting subprocess')
     # on fait une promesse en créant un subprocess qui va executer le script de scrap 
     proc = await asyncio.create_subprocess_exec('python', 'scrap.py',link,sid, stdout=asyncio.subprocess.PIPE)
-    """     
-    loading_sender(sid,sio)
-    await proc
-     """
-    # on récupère l'output brut
-    stdout, stderr = await proc.communicate()
-    # la réponse est en bytes --> On convertit la réponse en string 
-    output = str(stdout.strip())
 
-    print('/Subprocess output: ' + output)
+    ######### STREAM ######### faut prendre le output direct de la coroutine la c'est deja fini :'(
+    out = await proc.stdout.readline()
+    while out != b'':
+        print(out)
+        if out[0] == 37:
+            await sio.emit('loading',out.decode().split("%")[1],room=sid)
+        out = await proc.stdout.readline()
+
     print(f'/Subprocess finished with return code {proc.returncode}')
 
 
-""" 
-async def loading_sender(sid,sio):
-    line = ""
-    last_val = ""
-    while line != "done":
-        sleep(0.5)
-        f = open(f"./temp_subprocess_output/test.txt","r",encoding="utf-8")
-        line = f.readline()
-        if last_val != line:
-            print(line)
-            last_val = line
-            await sio.emit("loading",line,room=sid)
- """
 
 # lancement du serveur
 if __name__ == '__main__':

@@ -77,6 +77,5 @@ socket.on("timeout", ()=>{
 });
 
 socket.on("loading", (load)=>{
-    console.log("ok");
     console.log(load);
 });

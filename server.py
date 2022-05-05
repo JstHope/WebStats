@@ -3,7 +3,6 @@ from requests import get
 from os import remove
 from requests.exceptions import Timeout
 import socketio,asyncio
-from time import sleep
 
 ## Crée un serveur Async Socket IO 
 sio = socketio.AsyncServer()

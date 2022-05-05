@@ -224,78 +224,79 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
     mydb = myclient["Webstats"]
     mycol = mydb["lib"]
     for term in term_list:
-        version = ''
-        description = ''
-        source = ''
+        if DOMAIN not in term:
+            version = ''
+            description = ''
+            source = ''
 
-        if term.find(" version=") != -1:
-            term,version = term.split(" version=")
+            if term.find(" version=") != -1:
+                term,version = term.split(" version=")
 
-        ########### MONGO #########
-        if mycol.find_one({"name":term}) != None:
-            mongolib = mycol.find_one({"name":term})
-            print(term + " DB")
-            output.append({"name":mongolib["name"],"version":version,"description":mongolib["description"],"logo":mongolib["logo"],"source":mongolib["source"]})
+            ########### MONGO #########
+            if mycol.find_one({"name":term}) != None:
+                mongolib = mycol.find_one({"name":term})
+                print(term + " DB")
+                output.append({"name":mongolib["name"],"version":version,"description":mongolib["description"],"logo":mongolib["logo"],"source":mongolib["source"]})
 
-        
-        else:
-            error = False
-            escaped_term = term.replace(' ', '+')
-
-            # Proxy
-            proxies = ''
-            if proxy:
-                if proxy[:5]=="https":
-                    proxies = {"https": proxy} 
-                else:
-                    proxies = {"http": proxy}
             
-            # Fetch
-            start = 0
-            # Send request
-            resp = _req(escaped_term, num_results-start, lang, start, proxies)
+            else:
+                error = False
+                escaped_term = term.replace(' ', '+')
 
-            # Parse
-            soup = BeautifulSoup(resp.text, 'html.parser')
+                # Proxy
+                proxies = ''
+                if proxy:
+                    if proxy[:5]=="https":
+                        proxies = {"https": proxy} 
+                    else:
+                        proxies = {"http": proxy}
+                
+                # Fetch
+                start = 0
+                # Send request
+                resp = _req(escaped_term, num_results-start, lang, start, proxies)
 
-            #find wikipedia desc
-            try:
-                result_desc = soup.find('div', attrs={'id': 'rhs'})
-                description_box = result_desc.find('div', {'class': 'kno-rdesc'})
-                ###image
-                images = soup.find_all('img')
-                for image in images:
-                    if str(image.get("id"))[0:5] == "dimg_" or str(image.get("id"))[0:7] == "wp_thbn":
-                        print("",end="")
+                # Parse
+                soup = BeautifulSoup(resp.text, 'html.parser')
 
-                print(term)
-                description = description_box.find_all('span')[-3].text
-                source = "Wikipedia"
-
-            # Find description du premier lien     
-            except:
+                #find wikipedia desc
                 try:
-                    result_desc = soup.find('div', attrs={'class': 'g'})
-                    description_box = result_desc.find('div', {'style': '-webkit-line-clamp:2'})
-                    if description_box:
-                        description = description_box.find_all('span')[-1].text
-                        
-                    #trouve la source
-                    source = soup.find('div', attrs={'class': 'g'}).find('a', href=True)["href"]
+                    result_desc = soup.find('div', attrs={'id': 'rhs'})
+                    description_box = result_desc.find('div', {'class': 'kno-rdesc'})
+                    ###image
+                    images = soup.find_all('img')
+                    for image in images:
+                        if str(image.get("id"))[0:5] == "dimg_" or str(image.get("id"))[0:7] == "wp_thbn":
+                            print("",end="")
 
+                    print(term)
+                    description = description_box.find_all('span')[-3].text
+                    source = "Wikipedia"
+
+                # Find description du premier lien     
                 except:
-                    error = True
-                site = True
-                for black_site in BLACK_LIST:
-                    if source.find(black_site) != -1:
-                        site = False
-                        break
+                    try:
+                        result_desc = soup.find('div', attrs={'class': 'g'})
+                        description_box = result_desc.find('div', {'style': '-webkit-line-clamp:2'})
+                        if description_box:
+                            description = description_box.find_all('span')[-1].text
+                            
+                        #trouve la source
+                        source = soup.find('div', attrs={'class': 'g'}).find('a', href=True)["href"]
 
-                if error == False and site == True:
-                    output.append({"name":term,"version":version,"description":description,"logo":search_image_google(term),"source":source})
+                    except:
+                        error = True
+                    site = True
+                    for black_site in BLACK_LIST:
+                        if source.find(black_site) != -1:
+                            site = False
+                            break
 
-            #add to mango
-            mycol.insert_one({"name":term,"description":description,"logo":search_image_google(term),"source":source})
+                    if error == False and site == True:
+                        output.append({"name":term,"version":version,"description":description,"logo":search_image_google(term),"source":source})
+
+                #add to mango
+                mycol.insert_one({"name":term,"description":description,"logo":search_image_google(term),"source":source})
 
     return output
 

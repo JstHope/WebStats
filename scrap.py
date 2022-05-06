@@ -7,6 +7,8 @@ from sys import argv
 from time import sleep
 import time
 import pymongo
+
+
 # Préfixer les liens sans HTTP(S)
 # Faire une liste avec les attributs SRC des éléments script
 def Find_All_SRC(soup):
@@ -45,6 +47,7 @@ def clean_link(all_link):
     raw_lib = []
     domains = []
     for link in all_link:
+        raw_output = ''
         version = ''
         # Lister les domaines utilisés
         try:
@@ -85,12 +88,27 @@ def find_all_word(a_str, sub):
         yield start
         start += len(sub) # utiliser start += 1 pour trouver les matchs qui se superposent
 
+import concurrent.futures
+
+
+def load_url(url, timeout):
+    return get(url, timeout = timeout)
+def async_req(urls):
+    result = []
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        future_to_url = {executor.submit(load_url, url, 10): url for url in     urls}
+        for future in concurrent.futures.as_completed(future_to_url):
+            data = future.result()
+            result.append(data)
+    return result
+
 # Trouver les librairies importées
 def find_imported_lib(link_list):
     imported_lib = []
-    for src in link_list:
+    r_lists = async_req(link_list)
+
+    for r in r_lists:
         try:
-            r = get(src)
             scriptLocateImport = list(find_all_word(str(r.content),"require("))
             for startimport in scriptLocateImport:
                 k = False
@@ -104,7 +122,7 @@ def find_imported_lib(link_list):
                     endimport +=1
 
         except:
-            print("[INFO] Script sans attribut SRC : ",src)
+            print("[INFO] Script sans attribut SRC")
     # clean les outputs pour enlever les erreurs
     clean_imported_lib = []
     for lib in imported_lib:
@@ -290,9 +308,8 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
 
                     if error == False and site == True:
                         output.append({"name":term,"version":version,"description":description,"logo":search_image_google(term),"source":source})
-
-                #add to mango
-                mycol.insert_one({"name":term,"description":description,"logo":search_image_google(term),"source":source})
+                        #add to mango
+                        mycol.insert_one({"name":term,"description":description,"logo":search_image_google(term),"source":source})
 
     return output
 
@@ -308,54 +325,52 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
 #MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN##MAIN#
 ####################################################################################################################################
 ####################################################################################################################################
+if __name__ == "__main__":
+    BLACK_LIST = ["medium.com","github.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
 
-BLACK_LIST = ["medium.com","github.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
-
-
-sid = argv[2]
-URL = argv[1]
-# Définir la page à scraper
-#URL = "https://lcp.ictvs.ch/moodle"
-
-if URL[-1] == "/":
-    URL = URL[:-1]
+    sid = argv[2]
+    URL = argv[1]
 
 
-SSL = URL[:URL.find("://")]
-DOMAIN = URL.split("/")[2].split(".")[-2]
+    if URL[-1] == "/":
+        URL = URL[:-1]
 
-r = get(URL)
-print(r.status_code)
-if r.status_code != 200:
-    URL = URL.split("://")[0] + "://" +  URL.split("://")[1][4:]
+
+    SSL = URL[:URL.find("://")]
+    DOMAIN = URL.split("/")[2].split(".")[-2]
+
     r = get(URL)
+    print(r.status_code)
+    if r.status_code != 200:
+        URL = URL.split("://")[0] + "://" +  URL.split("://")[1][4:]
+        r = get(URL)
 
 
-# Récupérer et parser le code source de la page
-soup = BeautifulSoup(r.content, "html5lib")
+    # Récupérer et parser le code source de la page
+    soup = BeautifulSoup(r.content, "html5lib")
 
-start_time = time.time()
+    start_time = time.time()
 
-all_SRC = Find_All_SRC(soup)
-print("SRC --- %s seconds ---" % (time.time() - start_time))
+    all_SRC = Find_All_SRC(soup)
+    print("SRC --- %s seconds ---" % (time.time() - start_time))
 
-all_href = Find_All_HREF(soup)
-print("HREF--- %s seconds ---" % (time.time() - start_time))
-print("%10")
-all_link = all_href + all_SRC
+    all_href = Find_All_HREF(soup)
+    print("HREF--- %s seconds ---" % (time.time() - start_time))
+    print("%10")
+    all_link = all_href + all_SRC
 
-domains,raw_lib = clean_link(all_link)
-print("CL--- %s seconds ---" % (time.time() - start_time))
-print("%20")
-imported_lib = find_imported_lib(all_link)
-print("FIL --- %s seconds ---" % (time.time() - start_time))
-print("%60")
-famous_lib = famous_lib_finder(r,all_link)
-print("FLF--- %s seconds ---" % (time.time() - start_time))
-print("80")
-final_output = famous_lib + search(domains) + search(imported_lib)
-print("%100")
-print("done")
-fichier = open(f"temp_subprocess_output/{sid}.txt", "a", encoding="utf-8")
-fichier.write(str(final_output))
-fichier.close()
+    domains,raw_lib = clean_link(all_link)
+    print("CL--- %s seconds ---" % (time.time() - start_time))
+    print("%20")
+    imported_lib = find_imported_lib(all_link)
+    print("FIL --- %s seconds ---" % (time.time() - start_time))
+    print("%60")
+    famous_lib = famous_lib_finder(r,all_link)
+    print("FLF--- %s seconds ---" % (time.time() - start_time))
+    print("80")
+    final_output = famous_lib + search(domains) + search(imported_lib)
+    print("%100")
+    print("done")
+    fichier = open(f"temp_subprocess_output/{sid}.txt", "a", encoding="utf-8")
+    fichier.write(str(final_output))
+    fichier.close()

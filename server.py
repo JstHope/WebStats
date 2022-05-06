@@ -3,8 +3,6 @@ from requests import get
 from os import remove
 from requests.exceptions import Timeout
 import socketio,asyncio
-from time import sleep
-from asyncio import StreamReader
 ## Crée un serveur Async Socket IO 
 sio = socketio.AsyncServer()
 ## Crée une nouvelle application web Aiohttp

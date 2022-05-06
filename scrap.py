@@ -76,7 +76,6 @@ def clean_link(all_link):
 
         if raw_output not in raw_lib:
             raw_lib.append(raw_output)
-            
     return domains,raw_lib
 
 # Retourne tout les mots recherchés dans un texte 
@@ -183,9 +182,15 @@ def famous_lib_finder(r,all_link):
     if rcontent.find("Google Analytics") != -1:
         print("Google Analytics: Find")
         output.append({"name":"Google Analytics",
-                        "description":f"Google Analytics est un service gratuit d'analyse d'audience d'un site Web ou d'applications utilisé par plus de 10 millions de sites, soit plus de 80 % du marché mondial.",
+                        "description":"Google Analytics est un service gratuit d'analyse d'audience d'un site Web ou d'applications utilisé par plus de 10 millions de sites, soit plus de 80 % du marché mondial.",
                         "logo":"https://logowik.com/content/uploads/images/google-analytics-2020.jpg"
                         })
+    # recaptcha api
+    if "https://www.google.com/recaptcha/api.js" in all_link:
+        output.append({"name":"reCAPTCHA",
+                        "description":"reCAPTCHA est un système de détection automatisée d'utilisateurs appartenant à Google et mettant à profit les capacités de reconnaissance de ces derniers, mobilisées par les tests CAPTCHA, pour améliorer par la même occasion le processus de reconnaissance des formes par les robots.",
+                        "logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/RecaptchaLogo.svg/1200px-RecaptchaLogo.svg.png"
+                        }) 
 
     return output
 

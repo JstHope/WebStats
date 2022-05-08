@@ -3,7 +3,7 @@ from requests import get
 from os import remove
 from requests.exceptions import Timeout
 import socketio,asyncio
-## Crée un serveur Async Socket IO 
+## Crée un serveur Async Socket IO
 sio = socketio.AsyncServer()
 ## Crée une nouvelle application web Aiohttp
 app = web.Application()
@@ -13,22 +13,39 @@ sio.attach(app)
 
 # Pour retourner le index.html
 def index(request):
-    return web.FileResponse(path='static/index.html', status=200)
-
+    return web.FileResponse(path='OneDrive/Documents/Études/OC Informatique/Projet Python/WebStats/static/index.html', status=200)
 
 #ajout d'un fichier statique
 app.router.add_static('/styles/',
-                       path='static/styles',
+                       path='OneDrive/Documents/Études/OC Informatique/Projet Python/WebStats/static/styles',
                        name='styles')
 app.router.add_static('/resources/',
-                       path='static/resources',
+                       path='OneDrive/Documents/Études/OC Informatique/Projet Python/WebStats/static/resources',
                        name='resources')
 app.router.add_static('/js/',
-                       path='static/js',
+                       path='OneDrive/Documents/Études/OC Informatique/Projet Python/WebStats/static/js',
                        name='js')
-#met une redirection sur / a notre fichier html 
+#met une redirection sur / a notre fichier html
 app.router.add_get('/', index)
 
+"""
+# Pour retourner le index.html
+def index(request):
+    return web.FileResponse(path='OneDrive/Documents/Études/OC Informatique/Projet Python/WebStats/static/index.html', status=200)
+
+#ajout d'un fichier statique
+app.router.add_static('/styles/',
+                       path='OneDrive/Documents/Études/OC Informatique/Projet Python/WebStats/static/styles',
+                       name='styles')
+app.router.add_static('/resources/',
+                       path='OneDrive/Documents/Études/OC Informatique/Projet Python/WebStats/static/resources',
+                       name='resources')
+app.router.add_static('/js/',
+                       path='OneDrive/Documents/Études/OC Informatique/Projet Python/WebStats/static/js',
+                       name='js')
+#met une redirection sur / a notre fichier html
+app.router.add_get('/', index)
+"""
 
 
 @sio.on("send link")
@@ -72,9 +89,9 @@ async def send_all_data(sid,link):
     if r != '':
         if link[-1] == "/":
             link = link[:-1]
-        # on fait une promesse en lancant le subprocess 
+        # on fait une promesse en lancant le subprocess
         await asyncio.ensure_future(run_subprocess(link,sid))
-        # ouvre le txt crée
+        # ouvre le txt créé
         f = open(f'temp_subprocess_output/{sid}.txt','r',encoding="utf-8")
         # convertie le text en array de dictionnaire
         data = eval(f.read())
@@ -83,20 +100,20 @@ async def send_all_data(sid,link):
         try:
             remove(f'temp_subprocess_output/{sid}.txt')
         except:
-            print("le fichier a suprimmer n'existe pas")
+            print("le fichier à supprimer n'existe pas")
 
-        
-        # envoie le resultat au client grace au socketid
+
+        # envoie le résultat au client grâce au socketid
         await sio.emit('receive data',data,room=sid)
         print(f'[Data sended to {sid}]\n\n')
-    
+
 
 
 
 #creation d'une fonction asynchrone
 async def run_subprocess(link,sid):
     print('/Starting subprocess')
-    # on fait une promesse en créant un subprocess qui va executer le script de scrap 
+    # on fait une promesse en créant un subprocess qui va executer le script de scrap
     proc = await asyncio.create_subprocess_exec('python', 'scrap.py',link,sid, stdout=asyncio.subprocess.PIPE)
 
     ######### STREAM ######### faut prendre le output direct de la coroutine la c'est deja fini :'(
@@ -110,7 +127,20 @@ async def run_subprocess(link,sid):
     print(f'/Subprocess finished with return code {proc.returncode}')
 
 
+"""
+async def loading_sender(sid,sio):
+    line = ""
+    last_val = ""
+    while line != "done":
+        sleep(0.5)
+        f = open(f"./temp_subprocess_output/test.txt","r",encoding="utf-8")
+        line = f.readline()
+        if last_val != line:
+            print(line)
+            last_val = line
+            await sio.emit("loading",line,room=sid)
+"""
 
 # lancement du serveur
 if __name__ == '__main__':
-    web.run_app(app) 
+    web.run_app(app)

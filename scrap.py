@@ -74,7 +74,7 @@ def clean_link(all_link):
                 version = " version=" + link.split("/")[-2]
             raw_output = lib.split(".")[0] + " " + lib.split(".")[-1] + version
 
-        if raw_output not in raw_lib:
+        if raw_output not in raw_lib and version != '': # les lib sans version sont presque toujours de faux résultats
             raw_lib.append(raw_output)
     return domains,raw_lib
 
@@ -134,6 +134,8 @@ def find_imported_lib(link_list):
 def famous_lib_finder(r,all_link):
     rcontent = str(r.content)
     output = []
+    wp_plugins = []
+
     # Trouver le serveur si donné dans les headers de la réponse
     try:
         output = [{"Server":r.headers['Server']}]
@@ -177,6 +179,14 @@ def famous_lib_finder(r,all_link):
                         "description":"WordPress est un système de gestion de contenu gratuit, libre et open-source. Ce logiciel écrit en PHP repose sur une base de données MySQL et est distribué par la fondation WordPress.org.",
                         "logo":"https://seeklogo.com/images/W/wordpress-logo-9F351E1870-seeklogo.com.png"
                         })
+        for link in all_link:
+            if link.find("wp-content/plugins/") != -1:
+                plugin = link.split("wp-content/plugins/")[1]
+                if plugin.find("/"):
+                    plugin = plugin.split("/")[0] + " Wordpress"
+                if plugin not in wp_plugins:
+                    wp_plugins.append(plugin)
+
 
     # Google Analytics
     if rcontent.find("Google Analytics") != -1:
@@ -192,7 +202,7 @@ def famous_lib_finder(r,all_link):
                         "logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/RecaptchaLogo.svg/1200px-RecaptchaLogo.svg.png"
                         }) 
 
-    return output
+    return output,wp_plugins
 
 ################## Cherche le logo sur google image ##################
 def search_image_google(query):
@@ -331,7 +341,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
 ####################################################################################################################################
 ####################################################################################################################################
 if __name__ == "__main__":
-    BLACK_LIST = ["medium.com","github.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
+    BLACK_LIST = ["medium.com","www.npmjs.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
 
     sid = argv[2]
     URL = argv[1]
@@ -365,16 +375,27 @@ if __name__ == "__main__":
 
     domains,raw_lib = clean_link(all_link)
     print("CL--- %s seconds ---" % (time.time() - start_time))
-    print("%20")
+
     imported_lib = find_imported_lib(all_link)
     print("FIL --- %s seconds ---" % (time.time() - start_time))
-    print("%60")
-    famous_lib = famous_lib_finder(r,all_link)
+
+    famous_lib,wp_plugins = famous_lib_finder(r,all_link)
     print("FLF--- %s seconds ---" % (time.time() - start_time))
-    print("80")
-    final_output = famous_lib + search(domains) + search(imported_lib)
+    
+    final_output = famous_lib + search(domains)
+    print("Search domains--- %s seconds ---" % (time.time() - start_time))
+
+    final_output += search(imported_lib)
+    print("Search importedlib--- %s seconds ---" % (time.time() - start_time))
+
+    final_output += search(raw_lib)
+    print("Search raw--- %s seconds ---" % (time.time() - start_time))
+
+    if wp_plugins:
+        final_output += search(wp_plugins)
+        print("Search wp_plugins--- %s seconds ---" % (time.time() - start_time))
+
     print("%100")
-    print("SEARCH--- %s seconds ---" % (time.time() - start_time))
     print("done")
     fichier = open(f"temp_subprocess_output/{sid}.txt", "a", encoding="utf-8")
     fichier.write(str(final_output))

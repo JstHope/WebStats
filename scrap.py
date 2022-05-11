@@ -95,7 +95,7 @@ def load_url(url, timeout):
 def async_req(urls):
     result = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        future_to_url = {executor.submit(load_url, url, 10): url for url in     urls}
+        future_to_url = {executor.submit(load_url, url, 5): url for url in     urls}
         for future in concurrent.futures.as_completed(future_to_url):
             data = future.result()
             result.append(data)
@@ -350,7 +350,6 @@ if __name__ == "__main__":
         URL = URL.split("://")[0] + "://" +  URL.split("://")[1][4:]
         r = get(URL)
 
-
     # Récupérer et parser le code source de la page
     soup = BeautifulSoup(r.content, "html5lib")
 
@@ -375,6 +374,7 @@ if __name__ == "__main__":
     print("80")
     final_output = famous_lib + search(domains) + search(imported_lib)
     print("%100")
+    print("SEARCH--- %s seconds ---" % (time.time() - start_time))
     print("done")
     fichier = open(f"temp_subprocess_output/{sid}.txt", "a", encoding="utf-8")
     fichier.write(str(final_output))

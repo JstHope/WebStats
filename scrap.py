@@ -320,6 +320,17 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                         if source.find(black_site) != -1:
                             site = False
                             break
+                    if source.find("www.npmjs.com") != -1:
+                        r = get(source)
+                        soup = BeautifulSoup(r.content,"html5lib")
+                        p = soup.find("p", {"class": "_9ba9a726 f4 tl flex-auto fw6 black-80 ma0 pr2 pb1"})
+                        print(p.text)
+                        if int(p.text.replace(",","")) < 50000:
+                            site = False
+                        else:
+                            site = True
+                            
+
 
                     if error == False and site == True:
                         output.append({"name":term,"version":version,"description":description,"logo":search_image_google(term),"source":source})
@@ -341,7 +352,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
 ####################################################################################################################################
 ####################################################################################################################################
 if __name__ == "__main__":
-    BLACK_LIST = ["medium.com","www.npmjs.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
+    BLACK_LIST = ["medium.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
 
     sid = argv[2]
     URL = argv[1]

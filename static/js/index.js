@@ -4,6 +4,7 @@ var result = document.getElementById("result");
 var output_js = document.getElementById("output_js_lib");
 var urlname = document.getElementById("urlname");
 var output_section = document.getElementById("output-section");
+var error = document.getElementById("error");
 
 var pending = false
 var format = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
@@ -12,17 +13,18 @@ function send_link(){
     if (pending == false){
     inputval = input.value
     if (inputval.indexOf(".") != -1 && inputval.match(format)){
+    error.innerHTML = ''
     socket.emit("send link", inputval);
     pending = true;
     output_js.replaceChildren();
     output_section.style.display = "none"
     }
     else{
-    console.log("invalid link")
+        error.innerHTML = "[Erreur] Lien invalide (Charset)"
     }
 }
     else{
-    console.log("demande requete deja en cours...")}
+        error.innerHTML = "[Erreur] Vous avez déjà une recherche en cours"}
     }
 
 socket.on("receive data", (data)=>{
@@ -67,12 +69,12 @@ socket.on("receive data", (data)=>{
 });
 
 socket.on("invalid link", ()=>{
-    console.log("invalid link");
+    error.innerHTML = "[Erreur] Le lien est invalide";
     pending = false;
 });
 
 socket.on("timeout", ()=>{
-    console.log("timeout");
+    error.innerHTML = "[Erreur] La requête a expiré";
     pending = false;
 });
 

@@ -68,7 +68,6 @@ async def send_all_data(sid,link):
             except:
                 print("invalid link")
                 await sio.emit("invalid link",room=sid)
-    print(r.status_code)
 
     if r != '':
         if link[-1] == "/":

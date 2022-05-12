@@ -6,8 +6,26 @@ var urlname = document.getElementById("urlname");
 var output_section = document.getElementById("output-section");
 var error = document.getElementById("error");
 
-var pending = false
+var pending = false;
 var format = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
+
+function beautyname(des,name){
+    var clean_name = name.toLowerCase().replaceAll(" js","")
+    var clean_des = des.toLowerCase()
+
+    for(let k=0;k<2;k++){
+    if(clean_des.replaceAll(" ","").indexOf(clean_name) != -1){
+            let count = 0;
+            for(let i = 0;i<des.substring(clean_des.indexOf(clean_name),clean_name.length).length;i++){
+                if (des[i] == " "){count+=1}
+            }
+            return des.substring(clean_des.indexOf(clean_name),clean_des.indexOf(clean_name) + clean_name.length)
+        }
+        
+        else{clean_name = clean_name.split(".")[0]}
+    }
+    return name}
+
 
 function send_link(){
     if (pending == false){
@@ -42,7 +60,7 @@ socket.on("receive data", (data)=>{
         //
         var title = document.createElement('h4');
         title.classList.add("output-category__entry__firstline__title");
-        title.textContent = data[i]["name"];
+        title.textContent = beautyname(data[i]["description"],data[i]["name"]);
         firstline.appendChild(title);
         //
         var logo = document.createElement('div');

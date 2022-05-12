@@ -15,7 +15,7 @@ def Find_All_SRC(soup):
     scriptSRCList = []
     for scriptSoups in soup.findAll("script"):
         try:
-            if str(scriptSoups["src"])[0:2] == '//':
+            if str(scriptSoups["src"])[0:2] == '//': #startwith / objet = str?
                 scriptSRCList.append(SSL + ":" + scriptSoups["src"])
             elif str(scriptSoups["src"])[0] == '/':
                 scriptSRCList.append(URL + scriptSoups["src"])     
@@ -52,7 +52,7 @@ def clean_link(all_link):
         # Lister les domaines utilisés
         try:
             if link[0] != '/':
-                raw_output = link.split('/')[2].split(".")[-2] + "." + link.split('/')[2].split(".")[-1]
+                raw_output = link.split('/')[2].split(".")[-2] + "." + link.split('/')[2].split(".")[-1] #urlparse
                 if raw_output not in domains and raw_output != DOMAIN and len(raw_output) > 1:
                     domains.append(raw_output)
         except:
@@ -320,12 +320,13 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                         if source.find(black_site) != -1:
                             site = False
                             break
+
                     if source.find("www.npmjs.com") != -1:
                         r = get(source)
                         soup = BeautifulSoup(r.content,"html5lib")
                         p = soup.find("p", {"class": "_9ba9a726 f4 tl flex-auto fw6 black-80 ma0 pr2 pb1"})
                         print(p.text)
-                        if int(p.text.replace(",","")) < 50000:
+                        if int(p.text.replace(",","")) < 300000:
                             site = False
                         else:
                             site = True
@@ -352,7 +353,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
 ####################################################################################################################################
 ####################################################################################################################################
 if __name__ == "__main__":
-    BLACK_LIST = ["medium.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
+    BLACK_LIST = ["www.w3schools.com","medium.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
 
     sid = argv[2]
     URL = argv[1]
@@ -381,32 +382,38 @@ if __name__ == "__main__":
 
     all_href = Find_All_HREF(soup)
     print("HREF--- %s seconds ---" % (time.time() - start_time))
-    print("%10")
+    print("%10",flush=True)
     all_link = all_href + all_SRC
 
     domains,raw_lib = clean_link(all_link)
     print("CL--- %s seconds ---" % (time.time() - start_time))
+    print("%20",flush=True)
 
     imported_lib = find_imported_lib(all_link)
     print("FIL --- %s seconds ---" % (time.time() - start_time))
+    print("%30",flush=True)
 
     famous_lib,wp_plugins = famous_lib_finder(r,all_link)
     print("FLF--- %s seconds ---" % (time.time() - start_time))
-    
+    print("%40",flush=True)
+
     final_output = famous_lib + search(domains)
     print("Search domains--- %s seconds ---" % (time.time() - start_time))
+    print("%50",flush=True)
 
     final_output += search(imported_lib)
     print("Search importedlib--- %s seconds ---" % (time.time() - start_time))
+    print("%70",flush=True)
 
     final_output += search(raw_lib)
     print("Search raw--- %s seconds ---" % (time.time() - start_time))
+    print("%80",flush=True)
 
     if wp_plugins:
         final_output += search(wp_plugins)
         print("Search wp_plugins--- %s seconds ---" % (time.time() - start_time))
 
-    print("%100")
+    print("%100",flush=True)
     print("done")
     fichier = open(f"temp_subprocess_output/{sid}.txt", "a", encoding="utf-8")
     fichier.write(str(final_output))

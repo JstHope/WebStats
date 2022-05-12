@@ -243,6 +243,10 @@ section {
   /* Scrolling */
   max-height: 80vh;
   overflow: auto;
+  scrollbar-color: var(--accent-2-1);
+}
+.output::-webkit-scrollbar-thumb {
+  background: var(--accent-2);
 }
 .output-category__entry {
   padding: 0.75rem 0.5rem;

@@ -200,27 +200,33 @@ section {
 .tabview {
   display: grid;
   grid-template-columns: auto-fit, 15rem;
+  grid-gap: 1rem;
+}
+.tabview > h3 {
+  margin: 0;
 }
 .tabview__tab {
+  cursor: pointer;
   position: relative;
   padding: 0.5rem 1rem 0.5rem 4rem;
   border: 2px solid var(--accent-2-1);
   border-radius: 5px 5px 0 0;
   border-bottom: none;
   /* Onglet cliqué */
-  /*&--focused {
-
-    &::before {
-      content: "▼ ";
-    }
-  }*/
 }
 .tabview__tab::before {
   content: "▶ ";
   position: absolute;
+  left: 1ch;
   transition: 210ms ease-in-out;
+  /*Animation background */
+  background-size: 200%;
+  background-position: left;
 }
 .tabview__tab:hover::before {
+  background-position: right;
+}
+.tabview__tab--focused::before {
   transform: rotate(90deg);
 }
 
@@ -234,6 +240,9 @@ section {
   border-radius: 3px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
   color: var(--inverted-surface);
+  /* Scrolling */
+  max-height: 80vh;
+  overflow: auto;
 }
 .output-category__entry {
   padding: 0.75rem 0.5rem;

@@ -207,8 +207,14 @@ section {
 .tabview {
   display: grid;
   grid-template-columns: (auto-fit, 15rem);
+  grid-gap: 1rem;
+
+  & > h3 {
+    margin: 0;
+  }
 
   &__tab {
+    cursor: pointer;
     position: relative;
     padding: 0.5rem 1rem 0.5rem 4rem;
     border: 2px solid var(--accent-2-1);
@@ -218,19 +224,23 @@ section {
     &::before {
       content: "▶ ";
       position: absolute;
+      left: 1ch;
       transition: 210ms ease-in-out;
+      /*Animation background */
+      background-size: 200%;
+      background-position: left;
     }
     &:hover::before {
-      transform: rotate(90deg);
+      background-position: right;
     }
 
     /* Onglet cliqué */
-    /*&--focused {
+    &--focused {
 
       &::before {
-        content: "▼ ";
+        transform: rotate(90deg);
       }
-    }*/
+    }
   }
 }
 
@@ -244,6 +254,9 @@ section {
   border-radius: 3px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
   color: var(--inverted-surface);
+  /* Scrolling */
+  max-height: 80vh;
+  overflow: auto;
 
   &-category {
 

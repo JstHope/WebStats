@@ -15,9 +15,9 @@ def Find_All_SRC(soup):
     scriptSRCList = []
     for scriptSoups in soup.findAll("script"):
         try:
-            if str(scriptSoups["src"])[0:2] == '//':
+            if str(scriptSoups["src"]).startswith("//") == True:
                 scriptSRCList.append(SSL + ":" + scriptSoups["src"])
-            elif str(scriptSoups["src"])[0] == '/':
+            elif str(scriptSoups["src"]).startswith("/") == True:
                 scriptSRCList.append(URL + scriptSoups["src"])     
             else:
                 scriptSRCList.append(scriptSoups["src"])
@@ -31,9 +31,9 @@ def Find_All_HREF(soup):
     scriptHREFList = []
     for scriptSoups in soup.findAll("link"):
         try:
-            if str(scriptSoups["href"])[0:2] == '//':
+            if str(scriptSoups["href"]).startswith("//") == True:
                 scriptHREFList.append(SSL + ":" + scriptSoups["href"])
-            elif str(scriptSoups["href"])[0] == '/':
+            elif str(scriptSoups["href"]).startswith("/") == True:
                 scriptHREFList.append(URL + scriptSoups["href"])     
             else:
                 scriptHREFList.append(scriptSoups["href"])
@@ -352,7 +352,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
 ####################################################################################################################################
 ####################################################################################################################################
 if __name__ == "__main__":
-    BLACK_LIST = ["www.w3schools.com","medium.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
+    BLACK_LIST = ["medium.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
 
     sid = argv[2]
     URL = argv[1]

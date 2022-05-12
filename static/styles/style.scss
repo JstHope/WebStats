@@ -257,11 +257,6 @@ section {
   /* Scrolling */
   max-height: 80vh;
   overflow: auto;
-  scrollbar-color: linear-gradient(var(--accent-2-1), var(--accent-2-2));
-
-  &::-webkit-scrollbar-thumb {
-    background: ;
-  }
 
   &-category {
 

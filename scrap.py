@@ -7,7 +7,8 @@ from sys import argv
 from time import sleep
 import time
 import pymongo
-
+import requests
+import concurrent.futures
 
 # Préfixer les liens sans HTTP(S)
 # Faire une liste avec les attributs SRC des éléments script
@@ -51,10 +52,11 @@ def clean_link(all_link):
         version = ''
         # Lister les domaines utilisés
         try:
-            if link[0] != '/':
+            if link[0] != '/' and link != "https://www.google-analytics.com":
                 raw_output = link.split('/')[2].split(".")[-2] + "." + link.split('/')[2].split(".")[-1]
                 if raw_output not in domains and raw_output != DOMAIN and len(raw_output) > 1:
                     domains.append(raw_output)
+
         except:
             print(f"[INFO] {link} n'a pas de domains")
 
@@ -87,11 +89,13 @@ def find_all_word(a_str, sub):
         yield start
         start += len(sub) # utiliser start += 1 pour trouver les matchs qui se superposent
 
-import concurrent.futures
-
 
 def load_url(url, timeout):
-    return get(url, timeout = timeout)
+    print(url)
+    try:
+        return get(url, timeout = timeout)
+    except requests.exceptions.ConnectionError:
+        print("louche")
 def async_req(urls):
     result = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -99,6 +103,7 @@ def async_req(urls):
         for future in concurrent.futures.as_completed(future_to_url):
             data = future.result()
             result.append(data)
+
     return result
 
 # Trouver les librairies importées
@@ -189,7 +194,8 @@ def famous_lib_finder(r,all_link):
 
 
     # Google Analytics
-    if rcontent.find("Google Analytics") != -1:
+    if rcontent.find("Google Analytics") != -1 or "https://www.google-analytics.com" in all_link:
+
         print("Google Analytics: Find")
         output.append({"name":"Google Analytics",
                         "description":"Google Analytics est un service gratuit d'analyse d'audience d'un site Web ou d'applications utilisé par plus de 10 millions de sites, soit plus de 80 % du marché mondial.",
@@ -352,7 +358,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
 ####################################################################################################################################
 ####################################################################################################################################
 if __name__ == "__main__":
-    BLACK_LIST = ["medium.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
+    BLACK_LIST = ["w3schools.com","medium.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
 
     sid = argv[2]
     URL = argv[1]
@@ -382,6 +388,7 @@ if __name__ == "__main__":
     all_href = Find_All_HREF(soup)
     print("HREF--- %s seconds ---" % (time.time() - start_time))
     print("%10",flush=True)
+
     all_link = all_href + all_SRC
 
     domains,raw_lib = clean_link(all_link)

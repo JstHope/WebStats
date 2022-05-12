@@ -15,9 +15,9 @@ def Find_All_SRC(soup):
     scriptSRCList = []
     for scriptSoups in soup.findAll("script"):
         try:
-            if str(scriptSoups["src"])[0:2] == '//': #startwith / objet = str?
+            if str(scriptSoups["src"]).startswith("//") == True:
                 scriptSRCList.append(SSL + ":" + scriptSoups["src"])
-            elif str(scriptSoups["src"]).startswith("/"):
+            elif str(scriptSoups["src"]).startswith("/") == True:
                 scriptSRCList.append(URL + scriptSoups["src"])     
             else:
                 scriptSRCList.append(scriptSoups["src"])
@@ -31,9 +31,9 @@ def Find_All_HREF(soup):
     scriptHREFList = []
     for scriptSoups in soup.findAll("link"):
         try:
-            if str(scriptSoups["href"]).startswith("//"):
+            if str(scriptSoups["href"]).startswith("//") == True:
                 scriptHREFList.append(SSL + ":" + scriptSoups["href"])
-            elif str(scriptSoups["href"]).startswith("/"):
+            elif str(scriptSoups["href"]).startswith("/") == True:
                 scriptHREFList.append(URL + scriptSoups["href"])     
             else:
                 scriptHREFList.append(scriptSoups["href"])

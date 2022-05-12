@@ -19,7 +19,7 @@ function beautyname(des,name){
             for(let i = 0;i<des.substring(clean_des.indexOf(clean_name),clean_name.length).length;i++){
                 if (des[i] == " "){count+=1}
             }
-            return des.substring(clean_des.indexOf(clean_name),clean_des.indexOf(clean_name) + clean_name.length)
+            return des.substring(clean_des.replaceAll(" ","").indexOf(clean_name),clean_des.replaceAll(" ","").indexOf(clean_name) + clean_name.length + count)
         }
         
         else{clean_name = clean_name.split(".")[0]}

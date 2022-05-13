@@ -86,8 +86,8 @@ socket.on("receive data", (data)=>{
     window.scrollTo(0,document.body.scrollHeight);
 });
 
-socket.on("error", (error)=>{
-    error.innerHTML = "[Erreur] " + error;
+socket.on("error", (data)=>{
+    error.innerHTML = "[Erreur] " + data;
     pending = false;
 });
 

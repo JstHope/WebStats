@@ -24,8 +24,8 @@ def Find_All_SRC(soup):
                 else:
                     scriptSRCList.append(scriptSoups["src"])
 
-        except:
-            print("",end="")
+        except KeyError:
+            print("",end='') # si ya pas de script on fait rien
     return scriptSRCList
 
 # Faire une liste avec les attributs href des éléments script
@@ -41,7 +41,7 @@ def Find_All_HREF(soup):
                 else:
                     scriptHREFList.append(scriptSoups["href"])
 
-        except:
+        except KeyError:
             print("",end="")
     return scriptHREFList
 
@@ -53,14 +53,10 @@ def clean_link(all_link):
         raw_output = ''
         version = ''
         # Lister les domaines utilisés
-        try:
-            if link[0] != '/' and link != "https://www.google-analytics.com":
-                raw_output = link.split('/')[2].split(".")[-2] + "." + link.split('/')[2].split(".")[-1]
-                if raw_output not in domains and raw_output != DOMAIN and len(raw_output) > 1:
-                    domains.append(raw_output)
-
-        except:
-            print(f"[INFO] {link} n'a pas de domains")
+        if link[0] != '/' and link != "https://www.google-analytics.com":
+            raw_output = link.split('/')[2].split(".")[-2] + "." + link.split('/')[2].split(".")[-1]
+            if raw_output not in domains and raw_output != DOMAIN and len(raw_output) > 1:
+                domains.append(raw_output)
 
         # Chercher les noms d'extensions dans les fichiers JS
         if link.find(".js?ver=") != -1:
@@ -126,7 +122,7 @@ def find_imported_lib(link_list):
                             k = True
                     endimport +=1
 
-        except:
+        except AttributeError:
             print("[INFO] Script sans attribut SRC")
     # clean les outputs pour enlever les erreurs
     clean_imported_lib = []
@@ -145,7 +141,7 @@ def famous_lib_finder(r,all_link):
     # Trouver le serveur si donné dans les headers de la réponse
     try:
         output = [{"Server":r.headers['Server']}]
-    except:
+    except KeyError:
         output = [{"Server":"Inconnu"}]
 
     # Détection Wordpress
@@ -222,10 +218,8 @@ def search_image_google(query):
     soup = BeautifulSoup(str(resp.read()),"html.parser")
 
     images = soup.find_all("img")
-    try:
-        return images[1]["src"]
-    except:
-        return ""
+    return images[1]["src"]
+
 
 ################################################################################################
 ##################################### PARTIE GOOGLE SEARCH #####################################
@@ -255,7 +249,7 @@ def _req(term, results, lang, start, proxies):
 
     try:
         resp.raise_for_status()
-    except:
+    except requests.exceptions.RequestException:
         print("Google a bloqué la requête")
     return resp
 
@@ -310,7 +304,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                     source = "Wikipedia"
 
                 # Find description du premier lien     
-                except:
+                except AttributeError:
                     try:
                         result_desc = soup.find('div', attrs={'class': 'g'})
                         description_box = result_desc.find('div', {'style': '-webkit-line-clamp:2'})
@@ -320,7 +314,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                         #trouve la source
                         source = soup.find('div', attrs={'class': 'g'}).find('a', href=True)["href"]
 
-                    except:
+                    except TimeoutError:
                         error = True
                     site = True
                     for black_site in BLACK_LIST:

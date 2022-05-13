@@ -1,7 +1,7 @@
 from aiohttp import web
 from requests import get
 from os import remove
-from requests.exceptions import Timeout
+from requests.exceptions import Timeout,ConnectionError
 import socketio,asyncio
 ## Crée un serveur Async Socket IO 
 sio = socketio.AsyncServer()
@@ -45,9 +45,10 @@ async def send_all_data(sid,link):
         except Timeout:
                 print('Timeout has been raised.')
                 await sio.emit("error","La requête a expiré",room=sid)
-        except:
+        except ConnectionError:
             print("invalid link")
             await sio.emit("error","Le lien est invalide",room=sid)
+        
     else:
         if link[0:4] != "www.":
             link ="www." + link
@@ -57,7 +58,8 @@ async def send_all_data(sid,link):
         except Timeout:
             print('Timeout has been raised.')
             await sio.emit("error","La requête a expiré",room=sid)
-        except:
+        
+        except ConnectionError:
             try:
                 r = get("http://" + link, timeout=8)
                 link = "http://" + link
@@ -65,7 +67,7 @@ async def send_all_data(sid,link):
                 print('Timeout has been raised.')
                 await sio.emit("error","La requête a expiré",room=sid)
 
-            except:
+            except ConnectionError:
                 print("invalid link")
                 await sio.emit("error","Le lien est invalide",room=sid)
 

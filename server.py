@@ -79,7 +79,7 @@ async def send_all_data(sid,link):
             f = open(f'temp_subprocess_output/{sid}.txt','r',encoding="utf-8")
         except FileNotFoundError:
             print("Le fichier a ouvrir n'existe pas")
-            await sio.emit("error","Le subprocess n'a pas abouti")
+            await sio.emit("error","Le subprocess n'a pas abouti",room=sid)
         # convertie le text en array de dictionnaire
         data = eval(f.read())
         # ferme le ficher

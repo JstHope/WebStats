@@ -16,12 +16,13 @@ def Find_All_SRC(soup):
     scriptSRCList = []
     for scriptSoups in soup.findAll("script"):
         try:
-            if str(scriptSoups["src"]).startswith("//") == True:
-                scriptSRCList.append(SSL + ":" + scriptSoups["src"])
-            elif str(scriptSoups["src"]).startswith("/") == True:
-                scriptSRCList.append(URL + scriptSoups["src"])     
-            else:
-                scriptSRCList.append(scriptSoups["src"])
+            if str(scriptSoups["src"]).find("/") != -1:
+                if str(scriptSoups["src"]).startswith("//") == True:
+                    scriptSRCList.append(SSL + ":" + scriptSoups["src"])
+                elif str(scriptSoups["src"]).startswith("/") == True:
+                    scriptSRCList.append(URL + scriptSoups["src"])     
+                else:
+                    scriptSRCList.append(scriptSoups["src"])
 
         except:
             print("",end="")
@@ -32,12 +33,13 @@ def Find_All_HREF(soup):
     scriptHREFList = []
     for scriptSoups in soup.findAll("link"):
         try:
-            if str(scriptSoups["href"]).startswith("//") == True:
-                scriptHREFList.append(SSL + ":" + scriptSoups["href"])
-            elif str(scriptSoups["href"]).startswith("/") == True:
-                scriptHREFList.append(URL + scriptSoups["href"])     
-            else:
-                scriptHREFList.append(scriptSoups["href"])
+            if str(scriptSoups["href"]).find("/") != -1:
+                if str(scriptSoups["href"]).startswith("//") == True:
+                    scriptHREFList.append(SSL + ":" + scriptSoups["href"])
+                elif str(scriptSoups["href"]).startswith("/") == True:
+                    scriptHREFList.append(URL + scriptSoups["href"])     
+                else:
+                    scriptHREFList.append(scriptSoups["href"])
 
         except:
             print("",end="")
@@ -91,11 +93,10 @@ def find_all_word(a_str, sub):
 
 
 def load_url(url, timeout):
-    print(url)
     try:
         return get(url, timeout = timeout)
     except requests.exceptions.ConnectionError:
-        print("louche")
+        print(f"requests.exceptions.ConnectionError: [{url}]")
 def async_req(urls):
     result = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -358,7 +359,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
 ####################################################################################################################################
 ####################################################################################################################################
 if __name__ == "__main__":
-    BLACK_LIST = ["w3schools.com","medium.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
+    BLACK_LIST = ["github.com","w3schools.com","medium.com","developer.mozilla.org","checkwebsitetools.com","stackoverflow.com","codegrepper"]
 
     sid = argv[2]
     URL = argv[1]
@@ -393,21 +394,28 @@ if __name__ == "__main__":
 
     domains,raw_lib = clean_link(all_link)
     print("CL--- %s seconds ---" % (time.time() - start_time))
+    print("%20",flush=True)
+
 
     imported_lib = find_imported_lib(all_link)
     print("FIL --- %s seconds ---" % (time.time() - start_time))
+    print("%30",flush=True)
 
     famous_lib,wp_plugins = famous_lib_finder(r,all_link)
     print("FLF--- %s seconds ---" % (time.time() - start_time))
-    
+    print("%40",flush=True)
+
     final_output = famous_lib + search(domains)
     print("Search domains--- %s seconds ---" % (time.time() - start_time))
+    print("%60",flush=True)
 
     final_output += search(imported_lib)
     print("Search importedlib--- %s seconds ---" % (time.time() - start_time))
+    print("%80",flush=True)
 
     final_output += search(raw_lib)
     print("Search raw--- %s seconds ---" % (time.time() - start_time))
+    print("%90",flush=True)
 
     if wp_plugins:
         final_output += search(wp_plugins)

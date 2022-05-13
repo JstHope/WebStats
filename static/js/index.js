@@ -86,15 +86,11 @@ socket.on("receive data", (data)=>{
     window.scrollTo(0,document.body.scrollHeight);
 });
 
-socket.on("invalid link", ()=>{
-    error.innerHTML = "[Erreur] Le lien est invalide";
+socket.on("error", (error)=>{
+    error.innerHTML = "[Erreur] " + error;
     pending = false;
 });
 
-socket.on("timeout", ()=>{
-    error.innerHTML = "[Erreur] La requête a expiré";
-    pending = false;
-});
 
 socket.on("loading", (load)=>{
     console.log(load);

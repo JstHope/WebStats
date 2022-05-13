@@ -44,10 +44,10 @@ async def send_all_data(sid,link):
             r = get(link, timeout=8)
         except Timeout:
                 print('Timeout has been raised.')
-                await sio.emit("timeout",room=sid)
+                await sio.emit("error","La requête a expiré",room=sid)
         except:
             print("invalid link")
-            await sio.emit("invalid link",room=sid)
+            await sio.emit("error","Le lien est invalide",room=sid)
     else:
         if link[0:4] != "www.":
             link ="www." + link
@@ -56,18 +56,18 @@ async def send_all_data(sid,link):
             link = "https://" + link
         except Timeout:
             print('Timeout has been raised.')
-            await sio.emit("timeout",room=sid)
+            await sio.emit("error","La requête a expiré",room=sid)
         except:
             try:
                 r = get("http://" + link, timeout=8)
                 link = "http://" + link
             except Timeout:
                 print('Timeout has been raised.')
-                await sio.emit("timeout",room=sid)
+                await sio.emit("error","La requête a expiré",room=sid)
 
             except:
                 print("invalid link")
-                await sio.emit("invalid link",room=sid)
+                await sio.emit("error","Le lien est invalide",room=sid)
 
     if r != '':
         if link[-1] == "/":
@@ -75,14 +75,18 @@ async def send_all_data(sid,link):
         # on fait une promesse en lancant le subprocess 
         await asyncio.ensure_future(run_subprocess(link,sid))
         # ouvre le txt crée
-        f = open(f'temp_subprocess_output/{sid}.txt','r',encoding="utf-8")
+        try:
+            f = open(f'temp_subprocess_output/{sid}.txt','r',encoding="utf-8")
+        except FileNotFoundError:
+            print("Le fichier a ouvrir n'existe pas")
+            await sio.emit("error","Le subprocess n'a pas abouti")
         # convertie le text en array de dictionnaire
         data = eval(f.read())
         # ferme le ficher
         f.close()
         try:
             remove(f'temp_subprocess_output/{sid}.txt')
-        except:
+        except FileNotFoundError:
             print("le fichier a suprimmer n'existe pas")
 
         

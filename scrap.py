@@ -7,7 +7,7 @@ from sys import argv
 from time import sleep
 import time
 import pymongo
-import requests
+from requests.exceptions import ConnectionError,RequestException
 import concurrent.futures
 
 # Préfixer les liens sans HTTP(S)
@@ -91,7 +91,7 @@ def find_all_word(a_str, sub):
 def load_url(url, timeout):
     try:
         return get(url, timeout = timeout)
-    except requests.exceptions.ConnectionError:
+    except ConnectionError:
         print(f"requests.exceptions.ConnectionError: [{url}]")
 def async_req(urls):
     result = []
@@ -249,7 +249,7 @@ def _req(term, results, lang, start, proxies):
 
     try:
         resp.raise_for_status()
-    except requests.exceptions.RequestException:
+    except RequestException:
         print("Google a bloqué la requête")
     return resp
 
@@ -314,7 +314,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                         #trouve la source
                         source = soup.find('div', attrs={'class': 'g'}).find('a', href=True)["href"]
 
-                    except TimeoutError:
+                    except IndexError:
                         error = True
                     site = True
                     for black_site in BLACK_LIST:
@@ -326,7 +326,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                         soup = BeautifulSoup(r.content,"html5lib")
                         p = soup.find("p", {"class": "_9ba9a726 f4 tl flex-auto fw6 black-80 ma0 pr2 pb1"})
                         print(p.text)
-                        if int(p.text.replace(",","")) < 50000:
+                        if int(p.text.replace(",","")) < 500000:
                             site = False
                         else:
                             site = True

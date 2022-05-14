@@ -9,7 +9,7 @@ var error = document.getElementById("error");
 var pending = false;
 var format = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
 
-function beautyname(des,name){
+function beautyname(des,name){ /// fonction en cours de creation
     var clean_name = name.toLowerCase().replaceAll(" js","")
     var clean_des = des.toLowerCase()
 

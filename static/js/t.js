@@ -1,3 +1,4 @@
+/// fichier de test pour les fonctions js
 function beautyname(des,name){
     var clean_name = name.toLowerCase().replaceAll(" js","")
     var clean_des = des.toLowerCase()

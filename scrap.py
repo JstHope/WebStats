@@ -7,7 +7,7 @@ from sys import argv
 from time import sleep
 import time
 import pymongo
-from requests.exceptions import ConnectionError,RequestException
+from requests.exceptions import ConnectionError,RequestException,MissingSchema
 import concurrent.futures
 
 # Préfixer les liens sans HTTP(S)
@@ -53,10 +53,14 @@ def clean_link(all_link):
         raw_output = ''
         version = ''
         # Lister les domaines utilisés
-        if link[0] != '/' and link != "https://www.google-analytics.com":
-            raw_output = link.split('/')[2].split(".")[-2] + "." + link.split('/')[2].split(".")[-1]
-            if raw_output not in domains and raw_output != DOMAIN and len(raw_output) > 1:
-                domains.append(raw_output)
+        try:
+            if link[0] != '/' and link != "https://www.google-analytics.com":
+                raw_output = link.split('/')[2].split(".")[-2] + "." + link.split('/')[2].split(".")[-1]
+                if raw_output not in domains and raw_output != DOMAIN and len(raw_output) > 1:
+                    domains.append(raw_output)
+        except IndexError:
+            print(f"[{link}] n'a pas de domain.")
+
 
         # Chercher les noms d'extensions dans les fichiers JS
         if link.find(".js?ver=") != -1:
@@ -98,8 +102,11 @@ def async_req(urls):
     with concurrent.futures.ThreadPoolExecutor() as executor:
         future_to_url = {executor.submit(load_url, url, 5): url for url in     urls}
         for future in concurrent.futures.as_completed(future_to_url):
-            data = future.result()
-            result.append(data)
+            try:
+                data = future.result()
+                result.append(data)
+            except MissingSchema:
+                print("la requete n'a pas aboutie")
 
     return result
 
@@ -118,7 +125,9 @@ def find_imported_lib(link_list):
                     if str(r.content)[endimport] == ")":
                         result = str(r.content)[startimport+9:endimport-1]
                         if result not in imported_lib:
-                            imported_lib.append(result)
+                            if result.startswith("./") == False:
+                                imported_lib.append(result)
+
                             k = True
                     endimport +=1
 
@@ -394,6 +403,7 @@ if __name__ == "__main__":
     imported_lib = find_imported_lib(all_link)
     print("FIL --- %s seconds ---" % (time.time() - start_time))
     print("%30",flush=True)
+
 
     famous_lib,wp_plugins = famous_lib_finder(r,all_link)
     print("FLF--- %s seconds ---" % (time.time() - start_time))

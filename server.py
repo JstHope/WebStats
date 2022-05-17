@@ -12,7 +12,7 @@ app = web.Application()
 sio.attach(app)
 
 # Pour retourner le index.html
-def index(request):
+async def index(request):
     return web.FileResponse(path='static/index.html', status=200)
 
 
@@ -30,12 +30,13 @@ app.router.add_static('/js/',
 app.router.add_get('/', index)
 
 
-
+#quand le serveur recois le lien
 @sio.on("send link")
 async def send_all_data(sid,link):
     r=''
     print(link)
     
+    #il test le ssl et trouve si on se trouve en http ou https + test si le lien est valide + rend propre le lien
     if link[:link.find("://")] == 'https' or link[:link.find("://")] == 'http':
         if link[link.find("://"):][3:7] != "www.":
             link = link[:link.find("://")] + "://www." + link[link.find("://"):][3:]

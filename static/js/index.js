@@ -9,22 +9,30 @@ var error = document.getElementById("error");
 var pending = false;
 var format = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
 
-function beautyname(des,name){ /// fonction en cours de creation
+function beautyname(des,name){
     var clean_name = name.toLowerCase().replaceAll(" js","")
-    var clean_des = des.toLowerCase()
+    var clean_des = des.toLowerCase();
 
-    for(let k=0;k<2;k++){
-    if(clean_des.replaceAll(" ","").indexOf(clean_name) != -1){
-            let count = 0;
-            for(let i = 0;i<des.substring(clean_des.indexOf(clean_name),clean_name.length).length;i++){
-                if (des[i] == " "){count+=1}
+    count =0;
+    start = 0;
+    for(var i = 0; count<clean_name.length && i<des.length;i++){
+        if (clean_des[i] == clean_name[count] && start ==0){
+            count+=1;
+            start = i-1;
+        }else{
+            if (clean_des[i] == clean_name[count]){
+                count+=1;
             }
-            return des.substring(clean_des.indexOf(clean_name),clean_des.indexOf(clean_name) + clean_name.length)
+            else{      
+               if(clean_des[i] == " "){if (start ==0){start = i+1}}
+            else{
+            count = 0;
+            start = 0;}}}
+        if (count == clean_name.length){return des.substring(start,i+1)}
         }
-        
-        else{clean_name = clean_name.split(".")[0]}
-    }
-    return name}
+    
+    return name;       
+}
 
 
 function send_link(){

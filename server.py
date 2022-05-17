@@ -35,8 +35,7 @@ app.router.add_get('/', index)
 async def send_all_data(sid,link):
     r=''
     print(link)
-    # Test le SSL
-
+    
     if link[:link.find("://")] == 'https' or link[:link.find("://")] == 'http':
         if link[link.find("://"):][3:7] != "www.":
             link = link[:link.find("://")] + "://www." + link[link.find("://"):][3:]

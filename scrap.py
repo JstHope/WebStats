@@ -9,6 +9,7 @@ import time
 import pymongo
 from requests.exceptions import ConnectionError,RequestException,MissingSchema
 import concurrent.futures
+from urllib3.exceptions import ReadTimeoutError
 
 # Préfixer les liens sans HTTP(S)
 # Faire une liste avec les attributs SRC des éléments script
@@ -253,6 +254,11 @@ def _req(term, results, lang, start, proxies):
         return None
     else:
         print("Requête OK")
+
+    try:
+        resp.raise_for_status()
+    except ReadTimeoutError:
+        return None
 
     return resp
 

@@ -5,12 +5,13 @@ var output_js = document.getElementById("output_js_lib");
 var urlname = document.getElementById("urlname");
 var output_section = document.getElementById("output-section");
 var error = document.getElementById("error");
+var load = document.getElementById("load");
 
 var pending = false;
 var format = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
 
 function beautyname(des,name){
-    var clean_name = name.toLowerCase().replaceAll(" js","")
+    var clean_name = name.toLowerCase().replaceAll(" js","").replaceAll(" css","").replaceAll("-"," ")
     var clean_des = des.toLowerCase();
 
     count =0;
@@ -56,6 +57,8 @@ function send_link(){
 socket.on("receive data", (data)=>{
     pending = false;
     console.log(data);
+    map = data[0]["map"].split(" ");
+    console.log(map)
     urlname.textContent = data[0]["url"]
     for(let i = 1; i<data.length;i++){
         // cree un entry objet 
@@ -68,7 +71,12 @@ socket.on("receive data", (data)=>{
         //
         var title = document.createElement('h4');
         title.classList.add("output-category__entry__firstline__title");
-        title.textContent = beautyname(data[i]["description"],data[i]["name"]);
+        if (i>parseInt(map[0])+parseInt(map[1])){
+        title.textContent = beautyname(data[i]["description"],data[i]["name"]);}
+        else{
+            title.textContent = beautyname(data[i]["description"],data[i]["name"].split(".")[0]);
+        }
+
         firstline.appendChild(title);
         //
         var logo = document.createElement('div');
@@ -100,6 +108,6 @@ socket.on("error", (data)=>{
 });
 
 
-socket.on("loading", (load)=>{
-    console.log(load);
+socket.on("loading", (percent)=>{
+    load.innerHTML = percent;
 });

@@ -237,29 +237,23 @@ def search_image_google(query):
 usr_agent = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
 
 def _req(term, results, lang, start, proxies):
-    while True:
-        resp = get(
-            url="https://www.google.com/search",
-            headers=usr_agent,
-            params=dict(
-                q = term,
-                num = results + 2, # Prevents multiple requests
-                hl = lang,
-                start = start,
-            ),
-            proxies=proxies,
-        )
-        if resp.status_code == 429:
-            print("Google a bloqué la requète")
-            sleep(2)
-        else:
-            print("Requête OK")
-            break
+    resp = get(
+        url="https://www.google.com/search",
+        headers=usr_agent,
+        params=dict(
+            q = term,
+            num = results + 2, # Prevents multiple requests
+            hl = lang,
+            start = start,
+        ),
+        proxies=proxies,
+    )
+    if resp.status_code == 429:
+        print("Google a bloqué la requète")
+        return None
+    else:
+        print("Requête OK")
 
-    try:
-        resp.raise_for_status()
-    except RequestException:
-        print("Google a bloqué la requête")
     return resp
 
 def search(term_list, num_results=10, lang="fr", proxy=None):
@@ -299,53 +293,55 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                 start = 0
                 # Send request
                 resp = _req(escaped_term, num_results-start, lang, start, proxies)
+                
+                if resp != None:
+                        
+                    # Parse
+                    soup = BeautifulSoup(resp.text, 'html.parser')
 
-                # Parse
-                soup = BeautifulSoup(resp.text, 'html.parser')
-
-                #find wikipedia desc
-                try:
-                    result_desc = soup.find('div', attrs={'id': 'rhs'})
-                    description_box = result_desc.find('div', {'class': 'kno-rdesc'})
-                    ###image
-                    print(term)
-                    description = description_box.find_all('span')[-3].text
-                    source = "Wikipedia"
-
-                # Find description du premier lien     
-                except AttributeError:
+                    #find wikipedia desc
                     try:
-                        result_desc = soup.find('div', attrs={'class': 'g'})
-                        description_box = result_desc.find('div', {'style': '-webkit-line-clamp:2'})
-                        if description_box:
-                            description = description_box.find_all('span')[-1].text
-                            
-                        #trouve la source
-                        source = soup.find('div', attrs={'class': 'g'}).find('a', href=True)["href"]
+                        result_desc = soup.find('div', attrs={'id': 'rhs'})
+                        description_box = result_desc.find('div', {'class': 'kno-rdesc'})
+                        ###image
+                        print(term)
+                        description = description_box.find_all('span')[-3].text
+                        source = "Wikipedia"
 
-                    except IndexError:
-                        error = True
-                    site = True
-                    for black_site in BLACK_LIST:
-                        if source.find(black_site) != -1:
-                            site = False
-                            break
-                    if source.find("www.npmjs.com") != -1:
-                        r = get(source)
-                        soup = BeautifulSoup(r.content,"html5lib")
-                        p = soup.find("p", {"class": "_9ba9a726 f4 tl flex-auto fw6 black-80 ma0 pr2 pb1"})
-                        print(p.text)
-                        if int(p.text.replace(",","")) < 500000:
-                            site = False
-                        else:
-                            site = True
-                            
+                    # Find description du premier lien     
+                    except AttributeError:
+                        try:
+                            result_desc = soup.find('div', attrs={'class': 'g'})
+                            description_box = result_desc.find('div', {'style': '-webkit-line-clamp:2'})
+                            if description_box:
+                                description = description_box.find_all('span')[-1].text
+                                
+                            #trouve la source
+                            source = soup.find('div', attrs={'class': 'g'}).find('a', href=True)["href"]
+
+                        except IndexError:
+                            error = True
+                        site = True
+                        for black_site in BLACK_LIST:
+                            if source.find(black_site) != -1:
+                                site = False
+                                break
+                        if source.find("www.npmjs.com") != -1:
+                            r = get(source)
+                            soup = BeautifulSoup(r.content,"html5lib")
+                            p = soup.find("p", {"class": "_9ba9a726 f4 tl flex-auto fw6 black-80 ma0 pr2 pb1"})
+                            print(p.text)
+                            if int(p.text.replace(",","")) < 500000:
+                                site = False
+                            else:
+                                site = True
+                                
 
 
-                    if error == False and site == True:
-                        output.append({"name":term,"version":version,"description":description,"logo":search_image_google(term),"source":source})
-                        #add to mango
-                        mycol.insert_one({"name":term,"description":description,"logo":search_image_google(term),"source":source})
+                        if error == False and site == True:
+                            output.append({"name":term,"version":version,"description":description,"logo":search_image_google(term),"source":source})
+                            #add to mango
+                            mycol.insert_one({"name":term,"description":description,"logo":search_image_google(term),"source":source})
 
     return output
 
@@ -406,24 +402,37 @@ if __name__ == "__main__":
 
 
     famous_lib,wp_plugins = famous_lib_finder(r,all_link)
+    _map = str(len(famous_lib)-1)
+    final_output = famous_lib
     print("FLF--- %s seconds ---" % (time.time() - start_time))
     print("%40",flush=True)
 
-    final_output = famous_lib + search(domains)
+    domains_output = search(domains)
+    _map += " " + str(len(domains_output))
+    final_output += domains_output
     print("Search domains--- %s seconds ---" % (time.time() - start_time))
     print("%60",flush=True)
 
-    final_output += search(imported_lib)
+
+    imported_lib_output = search(imported_lib)
+    _map += " " + str(len(imported_lib_output))
+    final_output += imported_lib_output
     print("Search importedlib--- %s seconds ---" % (time.time() - start_time))
     print("%80",flush=True)
 
-    final_output += search(raw_lib)
+    raw_lib_output = search(raw_lib)
+    _map += " " + str(len(raw_lib_output))
+    final_output += raw_lib_output
     print("Search raw--- %s seconds ---" % (time.time() - start_time))
     print("%90",flush=True)
 
-    if wp_plugins:
-        final_output += search(wp_plugins)
-        print("Search wp_plugins--- %s seconds ---" % (time.time() - start_time))
+    
+    wp_plugins_output = search(wp_plugins)
+    _map += " " + str(len(wp_plugins_output))
+    final_output += wp_plugins_output
+    print("Search wp_plugins--- %s seconds ---" % (time.time() - start_time))
+
+    final_output[0]["map"] = _map
 
     print("%100",flush=True)
     print("done")

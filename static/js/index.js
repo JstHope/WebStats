@@ -76,10 +76,18 @@ socket.on("receive data", (data)=>{
         }
         var logo = document.createElement('div');
         logo.classList.add("output-category__entry__firstline__logo");
+
+
         firstline.appendChild(logo);
         //
         firstline.appendChild(title);
         //
+        if(data[i]["version"]){
+            var version = document.createElement('div');
+            version.classList.add("output-category__entry__firstline__version");
+            firstline.appendChild(version);
+        }
+        
         var image = document.createElement('img');
         image.classList.add("output-category__entry__firstline__logo__image");
         image.alt = "Logo de la librairie"

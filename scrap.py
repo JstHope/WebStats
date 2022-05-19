@@ -7,7 +7,7 @@ from sys import argv
 from time import sleep
 import time
 import pymongo
-from requests.exceptions import ConnectionError,RequestException,MissingSchema
+from requests.exceptions import ConnectionError,ReadTimeout,MissingSchema
 import concurrent.futures
 from urllib3.exceptions import ReadTimeoutError
 
@@ -18,15 +18,15 @@ def Find_All_SRC(soup):
     for scriptSoups in soup.findAll("script"):
         try:
             if str(scriptSoups["src"]).find("/") != -1:
-                if str(scriptSoups["src"]).startswith("//") == True:
+                if str(scriptSoups["src"]).startswith("//"):
                     scriptSRCList.append(SSL + ":" + scriptSoups["src"])
-                elif str(scriptSoups["src"]).startswith("/") == True:
+                elif str(scriptSoups["src"]).startswith("/"):
                     scriptSRCList.append(URL + scriptSoups["src"])     
                 else:
                     scriptSRCList.append(scriptSoups["src"])
 
         except KeyError:
-            print("",end='') # si ya pas de script on fait rien
+            pass
     return scriptSRCList
 
 # Faire une liste avec les attributs href des éléments script
@@ -35,15 +35,15 @@ def Find_All_HREF(soup):
     for scriptSoups in soup.findAll("link"):
         try:
             if str(scriptSoups["href"]).find("/") != -1:
-                if str(scriptSoups["href"]).startswith("//") == True:
+                if str(scriptSoups["href"]).startswith("//"):
                     scriptHREFList.append(SSL + ":" + scriptSoups["href"])
-                elif str(scriptSoups["href"]).startswith("/") == True:
+                elif str(scriptSoups["href"]).startswith("/"):
                     scriptHREFList.append(URL + scriptSoups["href"])     
                 else:
                     scriptHREFList.append(scriptSoups["href"])
 
         except KeyError:
-            print("",end="")
+            pass
     return scriptHREFList
 
 # Trouver les min.js
@@ -75,7 +75,7 @@ def clean_link(all_link):
 
         elif (link.find(".js") != -1 or link.find(".css") != -1) and link.find(".json") == -1:
             lib = link.split("/")[link.count("/")]
-            if link.split("/")[-2].split(".")[0].isdigit() == True:
+            if link.split("/")[-2].split(".")[0].isdigit():
                 version = " version=" + link.split("/")[-2]
             raw_output = lib.split(".")[0] + " " + lib.split(".")[-1] + version
 
@@ -102,12 +102,12 @@ def async_req(urls):
     result = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
         future_to_url = {executor.submit(load_url, url, 5): url for url in     urls}
-        for future in concurrent.futures.as_completed(future_to_url):
-            try:
+        try:
+            for future in concurrent.futures.as_completed(future_to_url):
                 data = future.result()
                 result.append(data)
-            except MissingSchema:
-                print("la requete n'a pas aboutie")
+        except (MissingSchema, ReadTimeout):
+            print("la requete n'a pas aboutie")
 
     return result
 
@@ -184,7 +184,7 @@ def famous_lib_finder(r,all_link):
                 count += 1
         version = ''
 
-    if WordPress == True:
+    if WordPress:
         print('WordPress ',version)
         output.append({"name":"WordPress",
                         "version":version,
@@ -344,7 +344,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                                 
 
 
-                        if error == False and site == True:
+                        if error == False and site:
                             output.append({"name":term,"version":version,"description":description,"logo":search_image_google(term),"source":source})
                             #add to mango
                             mycol.insert_one({"name":term,"description":description,"logo":search_image_google(term),"source":source})
@@ -396,7 +396,7 @@ if __name__ == "__main__":
     print("%10",flush=True)
 
     all_link = all_href + all_SRC
-
+    print(all_link,flush=True)
     domains,raw_lib = clean_link(all_link)
     print("CL--- %s seconds ---" % (time.time() - start_time))
     print("%20",flush=True)

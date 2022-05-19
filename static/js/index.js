@@ -74,12 +74,11 @@ socket.on("receive data", (data)=>{
         else{
             title.textContent = beautyname(data[i]["description"],data[i]["name"].split(".")[0]);
         }
-
-        firstline.appendChild(title);
-        //
         var logo = document.createElement('div');
         logo.classList.add("output-category__entry__firstline__logo");
         firstline.appendChild(logo);
+        //
+        firstline.appendChild(title);
         //
         var image = document.createElement('img');
         image.classList.add("output-category__entry__firstline__logo__image");

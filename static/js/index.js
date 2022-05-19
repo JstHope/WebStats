@@ -84,6 +84,7 @@ socket.on("receive data", (data)=>{
         //
         if(data[i]["version"]){
             var version = document.createElement('div');
+            version.textContent = data[i]["version"];
             version.classList.add("output-category__entry__firstline__version");
             firstline.appendChild(version);
         }

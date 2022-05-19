@@ -225,11 +225,15 @@ section {
     border-radius: 5px 5px 0 0;
     border-bottom: none;
     /* Reset styles */
-    color: inherit;
-    text-decoration: inherit;
     /*Animation background*/
     background-size: 150%;
-    transition: 210ms ease-in-out;
+    background-position: left;
+
+    a {
+      /*background: inherit;*/
+      color: inherit;
+      text-decoration: inherit;
+    }
 
     &::before {
       content: "▶ ";
@@ -237,11 +241,11 @@ section {
       left: 1ch;
       /*Animation background */
       background-size: 200%;
-      background-position: left;
     }
     &:hover,
-    &:hover::before {
+    &:hover a::before {
       background-position: right;
+      transition: 210ms ease-in-out;
     }
 
     /* Onglet cliqué */

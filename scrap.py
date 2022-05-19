@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 from urllib.request import Request,urlopen
 from urllib import parse
 from sys import argv
-from time import sleep
 import time
 import pymongo
 from requests.exceptions import ConnectionError,ReadTimeout,MissingSchema

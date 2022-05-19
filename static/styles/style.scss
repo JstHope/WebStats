@@ -141,13 +141,13 @@ section {
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);
   color: var(--inverted-surface);
 
-    > * {
-      flex-grow: 1;
-      flex-shrink: 1;
-      border: none;
-      font-size: var(--step-0);
-      font-family: var(--body-font);
-      color: var(--inverted-surface);
+  > * {
+    flex-grow: 1;
+    flex-shrink: 1;
+    border: none;
+    font-size: var(--step-0);
+    font-family: var(--body-font);
+    color: var(--inverted-surface);
   }
   &__input {
     padding: 0.125rem 1.5rem;
@@ -201,13 +201,17 @@ section {
     }
   }
 }
-
+.error-message {
+  color: red;
+  font-size: small;
+}
 
 /* RÉSULTATS */
 .tabview {
-  display: grid;
-  grid-template-columns: (auto-fit, 15rem);
-  grid-gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-inline: 7vw;
 
   & > h3 {
     margin: 0;
@@ -220,16 +224,22 @@ section {
     border: 2px solid var(--accent-2-1);
     border-radius: 5px 5px 0 0;
     border-bottom: none;
+    /* Reset styles */
+    color: inherit;
+    text-decoration: inherit;
+    /*Animation background*/
+    background-size: 150%;
+    transition: 210ms ease-in-out;
 
     &::before {
       content: "▶ ";
       position: absolute;
       left: 1ch;
-      transition: 210ms ease-in-out;
       /*Animation background */
       background-size: 200%;
       background-position: left;
     }
+    &:hover,
     &:hover::before {
       background-position: right;
     }

@@ -30,22 +30,19 @@
         <input type="text" id="input_link" class="searchbar__input" placeholder="Insérez une URL..." aria-label="Choisir le lien de la page web à inspecter">
         <button onClick="send_link()" class="searchbar__button">Rechercher</button>
       </div>
-      <h6 id='error' style="color: red; font-size: small;"></h6>
+      <h6 id='error' class="error-message"></h6>
     </section>
 
     <section id="output-section" style="display:none;">
       <h2>Résultats</h2>
-      <em id="urlname"></em>
 
       <div class="tabview">
         <h3 id="domaines"><a href="#domaines" class="tabview__tab">Domaines reliés</a></h3>
         <h3 id="librairies"><a href="#librairies" class="tabview__tab">Librairies JavaScript</a></h3>
       </div>
       <div class="output">
-
         <div class="output-category" id="output_js_lib"></div>
-
-        </div>
+      </div>
 
       </div>
     </section>

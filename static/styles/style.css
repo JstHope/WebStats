@@ -196,11 +196,17 @@ section {
   clip-path: none;
 }
 
+.error-message {
+  color: red;
+  font-size: small;
+}
+
 /* RÉSULTATS */
 .tabview {
-  display: grid;
-  grid-template-columns: auto-fit, 15rem;
-  grid-gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-inline: 7vw;
 }
 .tabview > h3 {
   margin: 0;
@@ -212,18 +218,23 @@ section {
   border: 2px solid var(--accent-2-1);
   border-radius: 5px 5px 0 0;
   border-bottom: none;
+  /* Reset styles */
+  color: inherit;
+  text-decoration: inherit;
+  /*Animation background*/
+  background-size: 150%;
+  transition: 210ms ease-in-out;
   /* Onglet cliqué */
 }
 .tabview__tab::before {
   content: "▶ ";
   position: absolute;
   left: 1ch;
-  transition: 210ms ease-in-out;
   /*Animation background */
   background-size: 200%;
   background-position: left;
 }
-.tabview__tab:hover::before {
+.tabview__tab:hover, .tabview__tab:hover::before {
   background-position: right;
 }
 .tabview__tab--focused::before, .tabview__tab:target::before {

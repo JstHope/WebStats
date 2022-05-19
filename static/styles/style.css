@@ -224,11 +224,11 @@ section {
   /* Onglet cliqué */
 }
 .tabview__tab a {
-  /*background: inherit;*/
+  background: inherit;
   color: inherit;
   text-decoration: inherit;
 }
-.tabview__tab::before {
+.tabview__tab a::before {
   content: "▶ ";
   position: absolute;
   left: 1ch;
@@ -294,6 +294,10 @@ section {
   flex-basis: 100px;
   max-width: 120px;
   aspect-ratio: 1/1;
+  /*Alignement interne*/
+  display: grid;
+  place-content: center;
+  place-items: center;
 }
 
 .loading {

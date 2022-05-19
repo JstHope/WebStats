@@ -231,17 +231,17 @@ section {
     background-position: left;
 
     a {
-      /*background: inherit;*/
+      background: inherit;
       color: inherit;
       text-decoration: inherit;
-    }
 
-    &::before {
-      content: "▶ ";
-      position: absolute;
-      left: 1ch;
-      /*Animation background */
-      background-size: 200%;
+      &::before {
+        content: "▶ ";
+        position: absolute;
+        left: 1ch;
+        /*Animation background */
+        background-size: 200%;
+      }
     }
     &:hover,
     &:hover a::before {
@@ -314,6 +314,10 @@ section {
           flex-basis: 100px;
           max-width: 120px;
           aspect-ratio: 1/1;
+          /*Alignement interne*/
+          display: grid;
+          place-content: center;
+          place-items: center;
         }
       }
     }

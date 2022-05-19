@@ -272,11 +272,11 @@ section {
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  place-content: center;
+  place-items: center;
 }
 .output-category__entry__firstline__title {
   display: grid;
-  place-content: center;
-  place-items: center;
 }
 .output-category__entry__firstline__logo {
   place-self: end;

@@ -2,7 +2,6 @@ const socket = io();
 var input = document.getElementById("input_link");
 var result = document.getElementById("result");
 var output_js = document.getElementById("output_js_lib");
-var urlname = document.getElementById("urlname");
 var output_section = document.getElementById("output-section");
 var error = document.getElementById("error");
 var load = document.getElementById("load");
@@ -59,7 +58,6 @@ socket.on("receive data", (data)=>{
     console.log(data);
     map = data[0]["map"].split(" ");
     console.log(map)
-    urlname.textContent = data[0]["url"]
     for(let i = 1; i<data.length;i++){
         // cree un entry objet 
         var entry = document.createElement('div');

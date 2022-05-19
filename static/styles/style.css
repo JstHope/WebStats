@@ -226,8 +226,11 @@ section {
 .tabview__tab:hover::before {
   background-position: right;
 }
-.tabview__tab--focused::before {
+.tabview__tab--focused::before, .tabview__tab:target::before {
   transform: rotate(90deg);
+}
+.tabview__tab--focused ~ .output, .tabview__tab:target ~ .output {
+  display: block;
 }
 
 .output {

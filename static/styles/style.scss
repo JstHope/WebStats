@@ -235,10 +235,14 @@ section {
     }
 
     /* Onglet cliqué */
-    &--focused {
+    &--focused,
+    &:target {
 
       &::before {
         transform: rotate(90deg);
+      }
+      & ~ .output {
+        display: block;
       }
     }
   }

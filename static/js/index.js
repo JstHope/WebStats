@@ -6,6 +6,10 @@ var output_section = document.getElementById("output-section");
 var error = document.getElementById("error");
 var load = document.getElementById("load");
 
+var domains_btn = document.getElementById("domaines");
+var lib_btn = document.getElementById("librairies");
+var wp_btn = document.getElementById("wp-plugins");
+
 input.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
         event.preventDefault();
@@ -145,6 +149,10 @@ socket.on("receive data", (data)=>{
         output_js.appendChild(document.createElement("hr"))
 
     }
+    if(map[4]=='0'){wp_btn.style.display = "none"}else{wp_btn.style.display = ""}
+    if(map[0]=='0' && map[1]=='0'){domains_btn.style.display = "none"}else{domains_btn.style.display = ""}
+    if(map[2]=='0' && map[3]=='0'){lib_btn.style.display = "none"}else{lib_btn.style.display = ""}
+
     output_list = document.getElementsByClassName("output-category__entry")
     show_domains()
     output_section.style.display = "";

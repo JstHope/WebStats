@@ -73,7 +73,7 @@ function show_domains(){
 }
 function show_lib(){
     for(let i=0;i<output_list.length;i++){
-        if(i<=parseInt(map[2]) + parseInt(map[3]) && i >= parseInt(map[0]) + parseInt(map[1])){
+        if(i< output_list.length - parseInt(map[4]) && i >= parseInt(map[0]) + parseInt(map[1])){
             output_list[i].style.display = "";
         }
         else{
@@ -83,7 +83,7 @@ function show_lib(){
 }
 function show_wp(){
     for(let i=0;i<output_list.length;i++){
-        if(i > output_list.length - parseInt(map[4])){
+        if(i >= output_list.length - parseInt(map[4])){
             output_list[i].style.display = "";
         }
         else{

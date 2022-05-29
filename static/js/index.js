@@ -103,6 +103,8 @@ socket.on("receive data", (data)=>{
     console.log(map)
     if (data[0]["Server"]== 'cloudflare' && data[0]["map"] == "0 0 0 0 0"){error.innerHTML = "[Erreur] Ce site est protégé par Cloudflare et ne peut donc pas être scanné."}
     else{
+        if(data[0]["map"] == "0 0 0 0 0"){error.innerHTML = "[Erreur] Aucune technologie trouvée sur ce site."}
+    else{
     for(let i = 1; i<data.length;i++){
         // cree un entry objet 
         var entry = document.createElement('div');
@@ -157,7 +159,7 @@ socket.on("receive data", (data)=>{
     show_domains()
     output_section.style.display = "";
     window.scrollTo(0,document.body.scrollHeight);}
-});
+}});
 
 socket.on("error", (data)=>{
     error.innerHTML = "[Erreur] " + data;

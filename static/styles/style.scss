@@ -28,7 +28,9 @@
   --accent-2: limegreen;
 }
 
-/*Default */
+/*
+*** Réglages par défaut
+*/
 * {
   padding: 0;
   margin: 0;
@@ -43,7 +45,9 @@ img {
   max-width: 100%;
 }
 
-/* Elements */
+/*
+*** Éléments de page
+*/
 hr {
   border: none;
   background: var(--accent-2);
@@ -91,8 +95,10 @@ h3 {
 }
 
 
-/* Behavior */
-html {
+/*
+*** Comportement
+*/
+.html-scroller {
   scroll-snap-type: mandatory;
   scroll-snap-points-y: repeat(100vh);
   scroll-snap-type: y mandatory;
@@ -103,7 +109,9 @@ section {
   scroll-snap-align: start;
 }
 
-/* Layout */
+/*
+*** Layout
+*/
 body {
   padding: 1rem;
   background: linear-gradient(45deg, var(--accent-1), var(--accent-1-dark));
@@ -128,7 +136,9 @@ section {
   margin-bottom: 2rem;
 }
 
-/* Search */
+/*
+*** Recherche
+*/
 .searchbar {
   position: relative;
   display: flex;
@@ -179,26 +189,8 @@ section {
       transform: scale(1.05);
     }
   }
-
-  /* Après clic */
-  &--clicked {
-    /*width: 10rem;
-    height: 10rem;*/
-    border-width: 0 !important;
-    border-radius: 100%;
-    animation: transformButton 800ms ease-in-out 0s 1 normal forwards;
-
-    > * {
-      width: 10rem;
-      height: 10rem;
-      border-radius: 100%;
-    }
-    .searchbar__button {
-      --surface: transparent;
-      clip-path: none;
-    }
-  }
 }
+
 .error-message {
   margin: 1rem;
   color: red;
@@ -206,7 +198,9 @@ section {
   font-family: 'PT Mono', monospace;
 }
 
-/* RÉSULTATS */
+/*
+*** Résultats
+*/
 .tabview {
   display: flex;
   flex-wrap: wrap;
@@ -250,14 +244,6 @@ section {
       background-position: right;
       transition: 210ms ease-in-out;
     }
-
-    /* Onglet cliqué
-    &--focused,
-    &:target {
-      & ~ .output {
-        display: block;
-      }
-    }*/
   }
 }
 
@@ -271,7 +257,7 @@ section {
   border-radius: 3px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
   color: var(--inverted-surface);
-  /* Scrolling */
+  /* Défilement */
   max-height: 80vh;
   overflow: auto;
   scrollbar-color: var(--accent-2-1);
@@ -339,23 +325,12 @@ section {
 }
 
 
-@keyframes transformButton {
-  0% {
-    transform: rotate(0deg);
-  }
-  50% {
-    width: 4rem;
-  }
-  100% {
-    transform: rotate(20deg);
-  }
-}
-
 /*
-***    DARK THEME
+*** THÈME SOMBRE
 */
 @media (prefers-color-scheme: dark) {
   :root {
+    /*Palette sombre*/
     --inverted-surface: #f2f2f2;
     --surface: #0f0f0f;
     --accent-1: #00383a;

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
+    <!-- Métadonnées -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -9,12 +10,16 @@
     <link rel="icon" type="image/png" href="resources/favicon-96x96.png" sizes="96x96">
     <meta property="og:title" content="WebStats" />
     <meta property="og:type" content="website" />
-    <!--<meta property="og:url" content="http://192.168.1.108:8080/" />-->
     <meta property="og:image" content="https://cdn.discordapp.com/attachments/486928125931028481/964932667781046292/logo_transparent.png" />
     <title>WebStats</title>
 
+    <!-- Ressources -->
     <link rel="stylesheet" href="styles/style.css">
     <script src="https://kit.fontawesome.com/a7ae4740fa.js" crossorigin="anonymous"></script>
+    <!--Barre de chargement
+    Source: https://loading.io/-->
+    <link rel="stylesheet" type="text/css" href="loading-bar.css"/>
+    <script type="text/javascript" src="loading-bar.js"></script>
   </head>
 
   <body>
@@ -31,6 +36,9 @@
         <button id='button' onClick="send_link()" class="searchbar__button">Rechercher</button>
       </div>
       <b id='error' class="error-message"></b>
+      <div class="modal-wrapper">
+        <div class="ldBar"></div>
+      </div>
     </section>
 
     <section id="output-section" style="display:none;">

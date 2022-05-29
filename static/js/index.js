@@ -58,7 +58,7 @@ socket.on("receive data", (data)=>{
     console.log(data);
     map = data[0]["map"].split(" ");
     console.log(map)
-    if (data[0]["Server"]== 'cloudflare'){error.innerHTML = "[Erreur] Ce site est protégé par Cloudflare et ne peut donc pas être scanné."}
+    if (data[0]["Server"]== 'cloudflare' && data[0]["map"] == "0 0 0 0 0"){error.innerHTML = "[Erreur] Ce site est protégé par Cloudflare et ne peut donc pas être scanné."}
     else{
     for(let i = 1; i<data.length;i++){
         // cree un entry objet 

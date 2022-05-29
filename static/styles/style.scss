@@ -82,8 +82,7 @@ h6 {
   font-size: var(--step-0);
 }
 
-h3,
-.tabview__tab::before {
+h3 {
   display: inline-block;
   color: transparent;
   background: var(--accent-2);
@@ -220,46 +219,45 @@ section {
 
   &__tab {
     cursor: pointer;
+    flex: 1 1 max(200px,30vw);
+    display: flex;
     position: relative;
     padding: 0.5rem 1rem 0.5rem 4rem;
     border: 2px solid var(--accent-2-1);
     border-radius: 5px 5px 0 0;
     border-bottom: none;
-    /* Reset styles */
     /*Animation background*/
     background-size: 150%;
     background-position: left;
 
-    a {
+    &__arrow {
+      display: grid;
+      place-content: center;
+      place-items: center;
+      transform: rotate(90deg);
+      transform-origin: center;
+      transition: 220ms ease-in-out;
+    }
+
+    &__link {
+      flex-grow: 1;
+      flex-shrink: 1;
       background: inherit;
       color: inherit;
       text-decoration: inherit;
-
-      &::before {
-        content: "▶ ";
-        position: absolute;
-        left: 1ch;
-        /*Animation background */
-        background-size: 200%;
-      }
     }
-    &:hover,
-    &:hover a::before {
+    &:hover {
       background-position: right;
       transition: 210ms ease-in-out;
     }
 
-    /* Onglet cliqué */
+    /* Onglet cliqué
     &--focused,
     &:target {
-
-      &::before {
-        transform: rotate(90deg);
-      }
       & ~ .output {
         display: block;
       }
-    }
+    }*/
   }
 }
 
@@ -287,6 +285,11 @@ section {
     &__entry {
       padding: 0.75rem 0.5rem;
       font-size: var(--step-0);
+      border-bottom: 1px solid var(--accent-2-1);
+
+      &:last-of-type {
+        border-bottom: none;
+      }
 
       &__firstline {
         position: relative;
@@ -374,6 +377,9 @@ section {
   }
   .searchbar__button {
     color: var(--surface);
+  }
+  .output-category__entry {
+    border-width: 2px;
   }
 }
 

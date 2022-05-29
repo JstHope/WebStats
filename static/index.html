@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="html-scroller">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -37,14 +37,9 @@
       <h2>Résultats</h2>
 
       <div class="tabview">
-        <h3 id="domaines" class="tabview__tab">
-          <div class="tabview__tab__arrow">▶</div>
-          <a href="#domaines" class="tabview__tab__link">Domaines reliés</a>
-        </h3>
-        <h3 id="librairies" class="tabview__tab">
-          <div class="tabview__tab__arrow">▶</div>
-          <a href="#librairies" class="tabview__tab__link">Librairies JavaScript</a>
-        </h3>
+        <h3 id="domaines" class="tabview__tab"><a onClick="show_domains()">Domaines reliés</a></h3>
+        <h3 id="librairies" class="tabview__tab"><a onClick="show_lib()">Librairies JavaScript</a></h3>
+        <h3 id="wp-plugins" class="tabview__tab"><a onClick="show_wp()">Plugins Wordpress</a></h3>
       </div>
       <div class="output">
         <div class="output-category" id="output_js_lib"></div>

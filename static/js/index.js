@@ -38,7 +38,7 @@ function beautyname(des,name){
         if (count == clean_name.length){return des.substring(start,i+1)}
         }
     
-    return name;       
+    return name.replace("Wordpress","").replaceAll("-"," ").replaceAll(" js","");       
 }
 
 
@@ -59,6 +59,38 @@ function send_link(){
     else{
         error.innerHTML = "[Erreur] Vous avez déjà une recherche en cours"}
     }
+
+
+function show_domains(){
+    for(let i=0;i<output_list.length;i++){
+        if(i<parseInt(map[0]) + parseInt(map[1])){
+            output_list[i].style.display = "";
+        }
+        else{
+            output_list[i].style.display = "none";          
+        }
+    }
+}
+function show_lib(){
+    for(let i=0;i<output_list.length;i++){
+        if(i<=parseInt(map[2]) + parseInt(map[3]) && i >= parseInt(map[0]) + parseInt(map[1])){
+            output_list[i].style.display = "";
+        }
+        else{
+            output_list[i].style.display = "none";          
+        }
+    }
+}
+function show_wp(){
+    for(let i=0;i<output_list.length;i++){
+        if(i > output_list.length - parseInt(map[4])){
+            output_list[i].style.display = "";
+        }
+        else{
+            output_list[i].style.display = "none";          
+        }
+    }
+}
 
 socket.on("receive data", (data)=>{
     pending = false;
@@ -113,6 +145,8 @@ socket.on("receive data", (data)=>{
         output_js.appendChild(document.createElement("hr"))
 
     }
+    output_list = document.getElementsByClassName("output-category__entry")
+    show_domains()
     output_section.style.display = "";
     window.scrollTo(0,document.body.scrollHeight);}
 });

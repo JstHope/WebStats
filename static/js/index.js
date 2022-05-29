@@ -6,6 +6,13 @@ var output_section = document.getElementById("output-section");
 var error = document.getElementById("error");
 var load = document.getElementById("load");
 
+input.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("button").click();
+    }
+});
+
 var pending = false;
 var format = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
 

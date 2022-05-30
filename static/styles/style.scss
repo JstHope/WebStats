@@ -310,11 +310,12 @@ section {
           place-items: center;
         }
         &__version {
-          place-self: start;
+          justify-self: start;
           margin: 1rem 1.5rem;
           padding: 0.5rem 1rem;
-          background: var(--accent-2);
+          background: var(--accent-1);
           color: var(--inverted-surface);
+          border-radius: 5px;
         }
       }
     }

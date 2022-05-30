@@ -324,7 +324,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                             #trouve la source
                             source = soup.find('div', attrs={'class': 'g'}).find('a', href=True)["href"]
 
-                        except IndexError:
+                        except (IndexError,AttributeError):
                             error = True
                         site = True
                         for black_site in BLACK_LIST:

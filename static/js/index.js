@@ -169,6 +169,7 @@ socket.on("receive data", (data)=>{
 
 socket.on("error", (data)=>{
     error.innerHTML = "[Erreur] " + data;
+    document.getElementsByClassName("searchbar")[0].style.display = "";
     pending = false;
 });
 

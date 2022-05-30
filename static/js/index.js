@@ -155,8 +155,9 @@ socket.on("receive data", (data)=>{
     if(map[0]=='0' && map[1]=='0'){domains_btn.style.display = "none"}else{domains_btn.style.display = ""}
     if(map[2]=='0' && map[3]=='0'){lib_btn.style.display = "none"}else{lib_btn.style.display = ""}
 
-    output_list = document.getElementsByClassName("output-category__entry")
-    show_domains()
+    output_list = document.getElementsByClassName("output-category__entry");
+    show_domains();
+    document.querySelectorAll("html")[0].classList.remove("html-scroller");
     output_section.style.display = "";
     window.scrollTo(0,document.body.scrollHeight);}
 }});

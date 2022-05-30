@@ -196,6 +196,10 @@ section {
 /*
 *** Chargement
 */
+#search-section {
+  position: relative;
+}
+
 .modal-wrapper {
   position: absolute;
   inset: 0;
@@ -229,14 +233,6 @@ section {
   /*Animation background*/
   background-size: 150%;
   background-position: left;
-}
-.tabview__tab__arrow {
-  display: grid;
-  place-content: center;
-  place-items: center;
-  transform: rotate(90deg);
-  transform-origin: center;
-  transition: 220ms ease-in-out;
 }
 .tabview__tab__link {
   flex-grow: 1;
@@ -296,11 +292,12 @@ section {
   place-items: center;
 }
 .output-category__entry__firstline__version {
-  place-self: start;
+  justify-self: start;
   margin: 1rem 1.5rem;
   padding: 0.5rem 1rem;
-  background: var(--accent-2);
+  background: var(--accent-1);
   color: var(--inverted-surface);
+  border-radius: 5px;
 }
 
 /*

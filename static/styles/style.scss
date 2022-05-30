@@ -202,6 +202,9 @@ section {
 /*
 *** Chargement
 */
+#search-section {
+  position: relative;
+}
 .modal-wrapper {
   position: absolute;
   inset: 0;
@@ -236,15 +239,6 @@ section {
     /*Animation background*/
     background-size: 150%;
     background-position: left;
-
-    &__arrow {
-      display: grid;
-      place-content: center;
-      place-items: center;
-      transform: rotate(90deg);
-      transform-origin: center;
-      transition: 220ms ease-in-out;
-    }
 
     &__link {
       flex-grow: 1;

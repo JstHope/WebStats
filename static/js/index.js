@@ -4,7 +4,6 @@ var result = document.getElementById("result");
 var output_js = document.getElementById("output_js_lib");
 var output_section = document.getElementById("output-section");
 var error = document.getElementById("error");
-var load = document.getElementById("load");
 var loading_bar = document.getElementsByClassName("modal-wrapper")[0];
 var bar1 = new ldBar("#loadbar");
 
@@ -175,6 +174,5 @@ socket.on("error", (data)=>{
 
 
 socket.on("loading", (percent)=>{
-    load.innerHTML = percent;
     bar1.set(parseInt(percent));
 });

@@ -29,5 +29,5 @@ Le code du projet WebStats, à l'exception du logo créé et utilisé suivant le
     lxml
 
 ### Gestion de base de donnée:
-    [MongoDB](https://www.mongodb.com) server version: 5.0.8
+    MongoDB server version: 5.0.8
 

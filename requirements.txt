@@ -6,4 +6,3 @@ requests
 urllib3
 html5lib
 lxml
-

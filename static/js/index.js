@@ -5,6 +5,7 @@ var output_js = document.getElementById("output_js_lib");
 var output_section = document.getElementById("output-section");
 var error = document.getElementById("error");
 var load = document.getElementById("load");
+var loading_bar = document.getElementsByClassName("modal-wrapper")[0];
 
 var domains_btn = document.getElementById("domaines");
 var lib_btn = document.getElementById("librairies");
@@ -53,6 +54,7 @@ function send_link(){
     error.innerHTML = ''
     socket.emit("send link", inputval);
     pending = true;
+    loading_bar.style.display = "" //ttttttttttttttttttttttttttttttttttttttttttttttttttt
     output_js.replaceChildren();
     output_section.style.display = "none"
     }
@@ -158,7 +160,8 @@ socket.on("receive data", (data)=>{
     output_list = document.getElementsByClassName("output-category__entry");
     show_domains();
     document.querySelectorAll("html")[0].classList.remove("html-scroller");
-    output_section.style.display = "";
+    output_section.style.display = ""; //ttttttttttttttttttttttttttttttttttttttttttttttttttt
+    loading_bar.style.display = "none"
     window.scrollTo(0,document.body.scrollHeight);}
 }});
 

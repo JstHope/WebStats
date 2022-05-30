@@ -54,6 +54,7 @@ function send_link(){
     error.innerHTML = ''
     socket.emit("send link", inputval);
     pending = true;
+    bar1.set(0);
     document.getElementsByClassName("searchbar")[0].style.display = "none"
     loading_bar.style.display = "" 
     output_js.replaceChildren();
@@ -104,9 +105,10 @@ socket.on("receive data", (data)=>{
     console.log(data);
     map = data[0]["map"].split(" ");
     console.log(map)
-    if (data[0]["Server"]== 'cloudflare' && data[0]["map"] == "0 0 0 0 0"){error.innerHTML = "[Erreur] Ce site est protégé par Cloudflare et ne peut donc pas être scanné."}
+    if (data[0]["Server"]== 'cloudflare' && data[0]["map"] == "0 0 0 0 0"){error.innerHTML = "[Erreur] Ce site est protégé par Cloudflare et ne peut donc pas être scanné.";loading_bar.style.display = "none";document.getElementsByClassName("searchbar")[0].style.display = ""}
     else{
-        if(data[0]["map"] == "0 0 0 0 0"){error.innerHTML = "[Erreur] Aucune technologie trouvée sur ce site."}
+        if(data[0]["map"] == "0 0 0 0 0"){error.innerHTML = "[Erreur] Aucune technologie trouvée sur ce site.";loading_bar.style.display = "none";document.getElementsByClassName("searchbar")[0].style.display = ""}
+        
     else{
     for(let i = 1; i<data.length;i++){
         // cree un entry objet 
@@ -170,6 +172,7 @@ socket.on("receive data", (data)=>{
 socket.on("error", (data)=>{
     error.innerHTML = "[Erreur] " + data;
     loading_bar.style.display = "none";
+    document.getElementsByClassName("searchbar")[0].style.display = "";
     pending = false;
 });
 

@@ -106,7 +106,7 @@ async def run_subprocess(link,sid):
     proc = await asyncio.create_subprocess_exec('python', 'scrap.py',link,sid, stdout=asyncio.subprocess.PIPE)
     #SERVER: proc = await asyncio.create_subprocess_exec('./env/bin/python3', 'scrap.py',link,sid, stdout=asyncio.subprocess.PIPE)
 
-    ######### STREAM ######### faut prendre le output direct de la coroutine la c'est deja fini :'(
+    ######### STREAM ######### on recupere le stream du subporecess
     out = await proc.stdout.readline()
     while out != b'':
         print(out)

@@ -18,8 +18,8 @@
     <script src="https://kit.fontawesome.com/a7ae4740fa.js" crossorigin="anonymous"></script>
     <!--Barre de chargement
     Source: https://loading.io/-->
-    <link rel="stylesheet" type="text/css" href="static/styles/loading-bar.css"/>
-    <script type="text/javascript" src="static/js/loading-bar.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles/loading-bar.css"/>
+    <script type="text/javascript" src="js/loading-bar.js"></script>
   </head>
 
   <body>
@@ -38,7 +38,11 @@
       <b id="error" class="error-message"></b>
 
       <div class="modal-wrapper" style="display:none">
-        <div class="ldBar"></div>
+        <div class="ldBar label-center"
+        data-preset="bubble"
+        data-value="35"
+        style="width:max(250px,45vw);height:max(250px,45vw);font-size: var(--step-5);color:black;font-weight: bold">
+        </div>
       </div>
     </section>
 

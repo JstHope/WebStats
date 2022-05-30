@@ -34,7 +34,8 @@
   box-sizing: border-box;
 }
 
-body {
+body,
+.ldBar-label {
   font-family: var(--body-font);
 }
 
@@ -192,6 +193,9 @@ section {
   font-family: "PT Mono", monospace;
 }
 
+/*
+*** Chargement
+*/
 .modal-wrapper {
   position: absolute;
   inset: 0;
@@ -207,7 +211,7 @@ section {
 .tabview {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  column-gap: 1rem;
   margin-inline: 7vw;
 }
 .tabview > h3 {
@@ -297,20 +301,6 @@ section {
   padding: 0.5rem 1rem;
   background: var(--accent-2);
   color: var(--inverted-surface);
-}
-
-.loading {
-  display: grid;
-  place-content: center;
-  place-items: center;
-  width: 300px;
-  height: 300px;
-  border-radius: 100vh;
-}
-.loading__ball {
-  width: 80px;
-  height: 80px;
-  border-radius: 100vh;
 }
 
 /*

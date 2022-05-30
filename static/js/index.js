@@ -6,6 +6,7 @@ var output_section = document.getElementById("output-section");
 var error = document.getElementById("error");
 var load = document.getElementById("load");
 var loading_bar = document.getElementsByClassName("modal-wrapper")[0];
+var bar1 = new ldBar("#loadbar");
 
 var domains_btn = document.getElementById("domaines");
 var lib_btn = document.getElementById("librairies");
@@ -171,6 +172,9 @@ socket.on("error", (data)=>{
 });
 
 
+
+
 socket.on("loading", (percent)=>{
     load.innerHTML = percent;
+    bar1.set(parseInt(percent));
 });

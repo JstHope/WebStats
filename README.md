@@ -18,15 +18,15 @@ Le code du projet WebStats, à l'exception du logo créé et utilisé suivant le
 ## Ressources tierces
 
 ### Libraries Python
-    `aiohttp==3.8.1`
-    `beautifulsoup4==4.11.1`
-    `gevent_socketio==0.3.6`
-    `pymongo==4.1.1`
-    `requests==2.26.0`
-    `urllib3==1.26.7`
-    `python-socketio`
-    `html5lib`
-    `lxml`
+    aiohttp==3.8.1
+    beautifulsoup4==4.11.1
+    gevent_socketio==0.3.6
+    pymongo==4.1.1
+    requests==2.26.0
+    urllib3==1.26.7
+    python-socketio
+    html5lib
+    lxml
 
 ### Gestion de base de donnée
 [MongoDB](https://www.mongodb.com) server version: 5.0.8

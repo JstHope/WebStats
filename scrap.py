@@ -4,9 +4,10 @@ from bs4 import BeautifulSoup
 from urllib.request import Request,urlopen
 from urllib import parse
 from sys import argv
+from time import sleep
 import time
 import pymongo
-from requests.exceptions import ConnectionError,ReadTimeout,MissingSchema
+from requests.exceptions import ConnectionError,RequestException,MissingSchema
 import concurrent.futures
 from urllib3.exceptions import ReadTimeoutError
 
@@ -17,9 +18,9 @@ def Find_All_SRC(soup):
     for scriptSoups in soup.findAll("script"):
         try:
             if str(scriptSoups["src"]).find("/") != -1:
-                if str(scriptSoups["src"]).startswith("//"):
+                if str(scriptSoups["src"]).startswith("//") == True:
                     scriptSRCList.append(SSL + ":" + scriptSoups["src"])
-                elif str(scriptSoups["src"]).startswith("/"):
+                elif str(scriptSoups["src"]).startswith("/") == True:
                     scriptSRCList.append(URL + scriptSoups["src"])     
                 else:
                     scriptSRCList.append(scriptSoups["src"])
@@ -34,9 +35,9 @@ def Find_All_HREF(soup):
     for scriptSoups in soup.findAll("link"):
         try:
             if str(scriptSoups["href"]).find("/") != -1:
-                if str(scriptSoups["href"]).startswith("//"):
+                if str(scriptSoups["href"]).startswith("//") == True:
                     scriptHREFList.append(SSL + ":" + scriptSoups["href"])
-                elif str(scriptSoups["href"]).startswith("/"):
+                elif str(scriptSoups["href"]).startswith("/") == True:
                     scriptHREFList.append(URL + scriptSoups["href"])     
                 else:
                     scriptHREFList.append(scriptSoups["href"])
@@ -74,11 +75,11 @@ def clean_link(all_link):
 
         elif (link.find(".js") != -1 or link.find(".css") != -1) and link.find(".json") == -1:
             lib = link.split("/")[link.count("/")]
-            if link.split("/")[-2].split(".")[0].isdigit():
+            if link.split("/")[-2].split(".")[0].isdigit() == True:
                 version = " version=" + link.split("/")[-2]
             raw_output = lib.split(".")[0] + " " + lib.split(".")[-1] + version
 
-        if raw_output not in raw_lib and version != '': # les lib sans version sont presque toujours de faux résultats
+        if raw_output not in raw_lib and version != '': # les libs sans version sont presque toujours de faux résultats
             raw_lib.append(raw_output)
     return domains,raw_lib
 
@@ -101,12 +102,12 @@ def async_req(urls):
     result = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
         future_to_url = {executor.submit(load_url, url, 5): url for url in     urls}
-        try:
-            for future in concurrent.futures.as_completed(future_to_url):
+        for future in concurrent.futures.as_completed(future_to_url):
+            try:
                 data = future.result()
                 result.append(data)
-        except (MissingSchema, ReadTimeout):
-            print("la requete n'a pas aboutie")
+            except MissingSchema:
+                print("la requete n'a pas aboutie")
 
     return result
 
@@ -183,7 +184,7 @@ def famous_lib_finder(r,all_link):
                 count += 1
         version = ''
 
-    if WordPress:
+    if WordPress == True:
         print('WordPress ',version)
         output.append({"name":"WordPress",
                         "version":version,
@@ -207,7 +208,7 @@ def famous_lib_finder(r,all_link):
                         "description":"Google Analytics est un service gratuit d'analyse d'audience d'un site Web ou d'applications utilisé par plus de 10 millions de sites, soit plus de 80 % du marché mondial.",
                         "logo":"https://logowik.com/content/uploads/images/google-analytics-2020.jpg"
                         })
-    # recaptcha api
+    # API ReCaptcha
     if "https://www.google.com/recaptcha/api.js" in all_link:
         output.append({"name":"reCAPTCHA",
                         "description":"reCAPTCHA est un système de détection automatisée d'utilisateurs appartenant à Google et mettant à profit les capacités de reconnaissance de ces derniers, mobilisées par les tests CAPTCHA, pour améliorer par la même occasion le processus de reconnaissance des formes par les robots.",
@@ -216,7 +217,7 @@ def famous_lib_finder(r,all_link):
 
     return output,wp_plugins
 
-################## Cherche le logo sur google image ##################
+################## Chercher le logo sur Google Images ##################
 def search_image_google(query):
     search = parse.quote(query)
     url = f'https://www.google.com/search?q={search}+logo&espv=2&biw=1366&bih=667&site=webhp&source=lnms&tbm=isch&sa=X&ei=XosDVaCXD8TasATItgE&ved=0CAcQ_AUoAg'
@@ -242,7 +243,7 @@ def _req(term, results, lang, start, proxies):
         headers=usr_agent,
         params=dict(
             q = term,
-            num = results + 2, # Prevents multiple requests
+            num = results + 2, # Éviter les requêtes multiples
             hl = lang,
             start = start,
         ),
@@ -296,7 +297,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                 
                 # Fetch
                 start = 0
-                # Send request
+                # Envoyer requête
                 resp = _req(escaped_term, num_results-start, lang, start, proxies)
                 
                 if resp != None:
@@ -304,7 +305,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                     # Parse
                     soup = BeautifulSoup(resp.text, 'html.parser')
 
-                    #find wikipedia desc
+                    # Trouver la description Wikipédia
                     try:
                         result_desc = soup.find('div', attrs={'id': 'rhs'})
                         description_box = result_desc.find('div', {'class': 'kno-rdesc'})
@@ -313,7 +314,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                         description = description_box.find_all('span')[-3].text
                         source = "Wikipedia"
 
-                    # Find description du premier lien     
+                    # Trouver la description du premier lien     
                     except AttributeError:
                         try:
                             result_desc = soup.find('div', attrs={'class': 'g'})
@@ -324,7 +325,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                             #trouve la source
                             source = soup.find('div', attrs={'class': 'g'}).find('a', href=True)["href"]
 
-                        except (IndexError,AttributeError):
+                        except IndexError:
                             error = True
                         site = True
                         for black_site in BLACK_LIST:
@@ -343,9 +344,9 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
                                 
 
 
-                        if error == False and site:
+                        if error == False and site == True:
                             output.append({"name":term,"version":version,"description":description,"logo":search_image_google(term),"source":source})
-                            #add to mango
+                            # Ajouter à la DB
                             mycol.insert_one({"name":term,"description":description,"logo":search_image_google(term),"source":source})
 
     return output
@@ -395,7 +396,7 @@ if __name__ == "__main__":
     print("%10",flush=True)
 
     all_link = all_href + all_SRC
-    print(all_link,flush=True)
+
     domains,raw_lib = clean_link(all_link)
     print("CL--- %s seconds ---" % (time.time() - start_time))
     print("%20",flush=True)

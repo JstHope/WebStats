@@ -104,6 +104,7 @@ async def run_subprocess(link,sid):
     print('/Starting subprocess')
     # on fait une promesse en créant un subprocess qui va executer le script de scrap 
     proc = await asyncio.create_subprocess_exec('python', 'scrap.py',link,sid, stdout=asyncio.subprocess.PIPE)
+    #SERVER: proc = await asyncio.create_subprocess_exec('./env/bin/python3', 'scrap.py',link,sid, stdout=asyncio.subprocess.PIPE)
 
     ######### STREAM ######### faut prendre le output direct de la coroutine la c'est deja fini :'(
     out = await proc.stdout.readline()
@@ -119,4 +120,4 @@ async def run_subprocess(link,sid):
 
 # lancement du serveur
 if __name__ == '__main__':
-    web.run_app(app) 
+    web.run_app(app,port=80) 

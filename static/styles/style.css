@@ -22,7 +22,9 @@
   --accent-1: #00adb4;
   --accent-1-light: #5cdfe7;
   --accent-1-dark: #007d85;
-  --accent-2: limegreen;
+  --accent-2-1: hsla(139, 100%, 23%, 1);
+  --accent-2-2: limegreen;
+  --accent-2: linear-gradient(90deg, var(--accent-2-1), var(--accent-2-2));
 }
 
 /*
@@ -206,7 +208,6 @@ section {
   display: grid;
   place-content: center;
   place-items: center;
-  background-color: rgba(0, 0, 0, 0.7);
 }
 
 /*
@@ -233,6 +234,13 @@ section {
   /*Animation background*/
   background-size: 150%;
   background-position: left;
+}
+.tabview__tab::before {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  inset: 0;
+  background-color: var(--surface);
 }
 .tabview__tab__link {
   flex-grow: 1;
@@ -313,7 +321,6 @@ section {
     --accent-1-dark: #171717;
     --accent-2-1: hsla(360, 86%, 67%, 1);
     --accent-2-2: hsla(303, 79%, 76%, 1);
-    --accent-2: linear-gradient(90deg, var(--accent-2-1), var(--accent-2-2));
     /* https://coolors.co/gradient-maker/f292ed-f36364*/
   }
 

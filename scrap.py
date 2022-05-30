@@ -45,7 +45,7 @@ def Find_All_HREF(soup):
             pass
     return scriptHREFList
 
-# Trouver les min.js
+# Trouver les domains et les librairies utilisées en parsant des liens
 def clean_link(all_link):
     raw_lib = []
     domains = []
@@ -62,7 +62,7 @@ def clean_link(all_link):
             print(f"[{link}] n'a pas de domain.")
 
 
-        # Chercher les noms d'extensions dans les fichiers JS
+        # Chercher les noms de librairies dans les fichiers JS
         if link.find(".js?ver=") != -1:
             lib = link.split("/")[link.count("/")]
             version = " version=" + lib.split(".js?ver=")[1]
@@ -78,7 +78,7 @@ def clean_link(all_link):
                 version = " version=" + link.split("/")[-2]
             raw_output = lib.split(".")[0] + " " + lib.split(".")[-1] + version
 
-        if raw_output not in raw_lib and version != '': # les lib sans version sont presque toujours de faux résultats
+        if raw_output not in raw_lib and version != '': # les libs sans version sont presque toujours de faux résultats
             raw_lib.append(raw_output)
     return domains,raw_lib
 
@@ -89,14 +89,15 @@ def find_all_word(a_str, sub):
         start = a_str.find(sub, start)
         if start == -1: return
         yield start
-        start += len(sub) # utiliser start += 1 pour trouver les matchs qui se superposent
+        start += len(sub)
 
-
+#fait des requetes
 def load_url(url, timeout):
     try:
         return get(url, timeout = timeout)
     except ConnectionError:
         print(f"requests.exceptions.ConnectionError: [{url}]")
+
 def async_req(urls):
     result = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -141,7 +142,7 @@ def find_imported_lib(link_list):
 
     return clean_imported_lib
     
-
+# Trouve des libraires spécifiques
 def famous_lib_finder(r,all_link):
     rcontent = str(r.content)
     output = []
@@ -236,7 +237,7 @@ def search_image_google(query):
 
 usr_agent = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
 
-def _req(term, results, lang, start, proxies):
+def _req(term, results, lang, start):
     resp = get(
         url="https://www.google.com/search",
         headers=usr_agent,
@@ -245,8 +246,7 @@ def _req(term, results, lang, start, proxies):
             num = results + 2, # Prevents multiple requests
             hl = lang,
             start = start,
-        ),
-        proxies=proxies,
+        )
     )
     if resp.status_code == 429:
         print("Google a bloqué la requète")
@@ -261,7 +261,8 @@ def _req(term, results, lang, start, proxies):
 
     return resp
 
-def search(term_list, num_results=10, lang="fr", proxy=None):
+# cherche des informations sur les technologies utilisées
+def search(term_list, num_results=10, lang="fr"):
     output = []
     myclient = pymongo.MongoClient("mongodb://localhost:27017/")
     mydb = myclient["Webstats"]
@@ -275,7 +276,7 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
             if term.find(" version=") != -1:
                 term,version = term.split(" version=")
 
-            ########### MONGO #########
+            ########### MONGO ######### cherche si la technologie est deja dans la base de donné
             if mycol.find_one({"name":term}) != None:
                 mongolib = mycol.find_one({"name":term})
                 print(term + " DB")
@@ -285,19 +286,10 @@ def search(term_list, num_results=10, lang="fr", proxy=None):
             else:
                 error = False
                 escaped_term = term.replace(' ', '+')
-
-                # Proxy
-                proxies = ''
-                if proxy:
-                    if proxy[:5]=="https":
-                        proxies = {"https": proxy} 
-                    else:
-                        proxies = {"http": proxy}
                 
-                # Fetch
                 start = 0
                 # Send request
-                resp = _req(escaped_term, num_results-start, lang, start, proxies)
+                resp = _req(escaped_term, num_results-start, lang, start)
                 
                 if resp != None:
                         

@@ -54,7 +54,8 @@ function send_link(){
     error.innerHTML = ''
     socket.emit("send link", inputval);
     pending = true;
-    loading_bar.style.display = "" //ttttttttttttttttttttttttttttttttttttttttttttttttttt
+    document.getElementsByClassName("searchbar")[0].style.display = "none"
+    loading_bar.style.display = "" 
     output_js.replaceChildren();
     output_section.style.display = "none"
     }
@@ -160,7 +161,8 @@ socket.on("receive data", (data)=>{
     output_list = document.getElementsByClassName("output-category__entry");
     show_domains();
     document.querySelectorAll("html")[0].classList.remove("html-scroller");
-    output_section.style.display = ""; //ttttttttttttttttttttttttttttttttttttttttttttttttttt
+    output_section.style.display = ""; 
+    document.getElementsByClassName("searchbar")[0].style.display = ""
     loading_bar.style.display = "none"
     window.scrollTo(0,document.body.scrollHeight);}
 }});

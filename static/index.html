@@ -35,10 +35,14 @@
         <input type="text" id="input_link" class="searchbar__input" placeholder="Insérez une URL..." aria-label="Choisir le lien de la page web à inspecter">
         <button id='button' onClick="send_link()" class="searchbar__button">Rechercher</button>
       </div>
-      <b id='error' class="error-message"></b>
+      <b id="error" class="error-message"></b>
+
+      <div class="modal-wrapper" style="display:none">
+        <div class="ldBar"></div>
+      </div>
     </section>
 
-    <section id="output-section" style="display:none;">
+    <section id="output-section" style="display:none">
       <h2>Résultats</h2>
 
       <div class="tabview">
